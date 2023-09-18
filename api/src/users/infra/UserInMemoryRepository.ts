@@ -2,14 +2,14 @@ import { User } from "../domain/User";
 import { UserRepository } from "../domain/UserRepository";
 
 class UserInMemoryRepositoryImpl implements UserRepository {
-	users: User[];
+	users: Map<string, User>;
 
-	constructor(users: User[] = []) {
+	constructor(users: Map<string, User> = new Map()) {
 		this.users = users;
 	}
 
 	create(user: User): User {
-		this.users.push(user);
+		this.users.set(user.email, user);
 
 		return user;
 	}
@@ -18,7 +18,7 @@ class UserInMemoryRepositoryImpl implements UserRepository {
 export class UserInMemoryRepository {
 	private static repository: UserRepository | undefined;
 
-	static initialize(users: User[] = []): UserRepository {
+	static initialize(users: Map<string, User> = new Map()): UserRepository {
 		if (this.repository) {
 			return this.repository;
 		}

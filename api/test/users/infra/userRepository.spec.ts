@@ -6,7 +6,7 @@ import { UserInMemoryRepository } from "../../../src/users/infra/UserInMemoryRep
 describe("UserRepository", () => {
 	it("should be empty at the beginning", () => {
 		const userRepository = UserInMemoryRepository.initialize();
-		expect(userRepository.users.length).toEqual(0);
+		expect(userRepository.users.size).toEqual(0);
 	});
 
 	it("should have the user after create it", () => {
@@ -19,6 +19,7 @@ describe("UserRepository", () => {
 			phoneNumber: "+00666666666",
 		};
 		userRepository.create(user);
-		expect(userRepository.users.length).toEqual(1);
+		expect(userRepository.users.get(user.email)).not.toBeNull();
+		expect(userRepository.users.size).toEqual(1);
 	});
 });
