@@ -18,8 +18,8 @@ describe("UserRepository", () => {
 			email: "john.doe@mail.com",
 			phoneNumber: "+00666666666",
 		};
-		userRepository.create(user);
-		expect(userRepository.users.get(user.email)).not.toBeNull();
+		const createdUser = userRepository.create(user).get();
+		expect(userRepository.users.get(user.email)).toEqual(createdUser);
 		expect(userRepository.users.size).toEqual(1);
 	});
 });

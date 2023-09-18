@@ -1,3 +1,5 @@
+import { Optional } from "typescript-optional";
+
 import { User } from "../domain/User";
 import { UserRepository } from "../domain/UserRepository";
 
@@ -8,10 +10,10 @@ class UserInMemoryRepositoryImpl implements UserRepository {
 		this.users = users;
 	}
 
-	create(user: User): User {
+	create(user: User): Optional<User> {
 		this.users.set(user.email, user);
 
-		return user;
+		return Optional.of(user);
 	}
 }
 
