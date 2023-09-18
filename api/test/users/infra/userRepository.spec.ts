@@ -5,12 +5,12 @@ import { UserInMemoryRepository } from "../../../src/users/infra/UserInMemoryRep
 
 describe("UserRepository", () => {
 	it("should be empty at the beginning", () => {
-		const userRepository = new UserInMemoryRepository();
+		const userRepository = UserInMemoryRepository.initialize();
 		expect(userRepository.users.length).toEqual(0);
 	});
 
 	it("should have the user after create it", () => {
-		const userRepository = new UserInMemoryRepository();
+		const userRepository = UserInMemoryRepository.initialize();
 		const user: User = {
 			id: randomUUID(),
 			name: "John",
