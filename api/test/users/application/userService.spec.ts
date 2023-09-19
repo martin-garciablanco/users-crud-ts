@@ -5,21 +5,17 @@ import { UserService } from "../../../src/users/application/UserService";
 import { UserFactory } from "../../../src/users/domain/UserFactory";
 import { UserInMemoryRepository } from "../../../src/users/infra/UserInMemoryRepository";
 import { UserRequest } from "../../../src/users/infra/UserRequest";
+import { userRequestStub } from "../userFixtures";
 
 describe("UserService", () => {
 	it("should create an user", () => {
-		const user: UserRequest = {
-			name: "John",
-			lastName: "Doe",
-			email: "john.doe@mail.com",
-			phoneNumber: "+00666666666",
-		};
+		const userRequest: UserRequest = userRequestStub;
 		const userCreatedStub = {
 			id: randomUUID(),
-			name: user.name,
-			lastName: user.lastName,
-			email: user.email,
-			phoneNumber: user.phoneNumber,
+			name: userRequest.name,
+			lastName: userRequest.lastName,
+			email: userRequest.email,
+			phoneNumber: userRequest.phoneNumber,
 		};
 		const repositoryCreateMock = jest.fn().mockImplementation(() => Optional.of(userCreatedStub));
 		const factoryCreateMock = jest.fn().mockImplementation(() => userCreatedStub);
@@ -31,10 +27,10 @@ describe("UserService", () => {
 		});
 		const userService = new UserService();
 
-		const createdUser = userService.createUser(user);
+		const createdUser = userService.createUser(userRequest);
 
 		expect(repositoryCreateMock).toHaveBeenCalledTimes(1);
 		expect(factoryCreateMock).toHaveBeenCalledTimes(1);
-		expect(userCreatedStub).toEqual(createdUser);
+		expect(createdUser).toEqual(userRequest);
 	});
 });

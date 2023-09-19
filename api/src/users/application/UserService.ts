@@ -14,7 +14,7 @@ export class UserService {
 		const user = UserFactory.create({ name, lastName, phoneNumber, email });
 		const createdUser = this.userRepository.create(user);
 		if (createdUser.isPresent()) {
-			return user;
+			return { name, lastName, phoneNumber, email };
 		}
 		throw new Error("User already exists");
 	}
