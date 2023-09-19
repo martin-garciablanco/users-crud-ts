@@ -25,9 +25,7 @@ export class UserService {
 	getAllUsers(): Array<UserRequest> {
 		const allUsers = this.userRepository.getAll();
 
-		return allUsers.map(({ name, lastName, email, phoneNumber }: User) =>
-			UserRequestFactory.create({ name, lastName, email, phoneNumber }),
-		);
+		return allUsers.map((user: User) => UserRequestFactory.createFromUser(user));
 	}
 
 	getUserByEmail(email: string): UserRequest {
