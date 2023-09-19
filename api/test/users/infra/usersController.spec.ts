@@ -1,11 +1,11 @@
 import request from "supertest";
 
 import app from "../../../src/app";
-import { UserService } from "../../../src/users/application/UserService";
-import { User } from "../../../src/users/domain/User";
-import { UserRepository } from "../../../src/users/domain/UserRepository";
-import { UserInMemoryRepository } from "../../../src/users/infra/UserInMemoryRepository";
-import { UserRequest } from "../../../src/users/infra/UserRequest";
+import { UserService } from "../../../src/user/application/UserService";
+import { User } from "../../../src/user/domain/User";
+import { UserRepository } from "../../../src/user/domain/UserRepository";
+import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
+import { UserRequest } from "../../../src/user/infra/UserRequest";
 import { createRandomUserRequest, userRequestStub, userStub } from "../userFixtures";
 
 const usersRequest: UserRequest = userRequestStub;

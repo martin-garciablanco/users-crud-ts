@@ -1,6 +1,6 @@
-import { User } from "../../../src/users/domain/User";
-import { UserRepository } from "../../../src/users/domain/UserRepository";
-import { UserInMemoryRepository } from "../../../src/users/infra/UserInMemoryRepository";
+import { User } from "../../../src/user/domain/User";
+import { UserRepository } from "../../../src/user/domain/UserRepository";
+import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
 import { createRandomUser, userStub } from "../userFixtures";
 
 let userRepository: UserRepository;

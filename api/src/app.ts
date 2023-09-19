@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 
-import { userEndpoints } from "./users/infra/UserController";
+import { userEndpoints } from "./user/infra/UserController";
 
 // Create Express server
 const app = express();

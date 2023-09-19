@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 
-import { User } from "../../src/users/domain/User";
-import { UserRequest } from "../../src/users/infra/UserRequest";
+import { User } from "../../src/user/domain/User";
+import { UserRequest } from "../../src/user/infra/UserRequest";
 
 export const userStub = {
 	id: randomUUID(),

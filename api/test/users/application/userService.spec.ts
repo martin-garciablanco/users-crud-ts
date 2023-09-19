@@ -1,11 +1,11 @@
 import { randomUUID } from "crypto";
 import { Optional } from "typescript-optional";
 
-import { UserAlreadyExistsError } from "../../../src/users/application/UserAlreadyExistsError";
-import { UserService } from "../../../src/users/application/UserService";
-import { UserFactory } from "../../../src/users/domain/User";
-import { UserInMemoryRepository } from "../../../src/users/infra/UserInMemoryRepository";
-import { UserRequest } from "../../../src/users/infra/UserRequest";
+import { UserAlreadyExistsError } from "../../../src/user/application/UserAlreadyExistsError";
+import { UserService } from "../../../src/user/application/UserService";
+import { UserFactory } from "../../../src/user/domain/User";
+import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
+import { UserRequest } from "../../../src/user/infra/UserRequest";
 import { createRandomUser, userRequestStub } from "../userFixtures";
 
 describe("UserService", () => {
