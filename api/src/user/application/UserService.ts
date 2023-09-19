@@ -39,4 +39,12 @@ export class UserService {
 
 		throw new UserNotFoundError(`email: ${email}`);
 	}
+
+	deleteUserByEmail(email: string): string {
+		const userOptional = this.userRepository.deleteByEmail(email);
+		if (userOptional.isPresent()) {
+			return email;
+		}
+		throw new UserNotFoundError(`email: ${email}`);
+	}
 }

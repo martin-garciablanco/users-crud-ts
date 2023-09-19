@@ -109,4 +109,33 @@ describe("UserService", () => {
 			expect(foundUserRequest).toEqual(UserRequestFactory.createFromUser(user));
 		});
 	});
+
+	describe("removeUserByEmail", () => {
+		it("should throw an error when user not found", () => {
+			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
+				return {
+					deleteByEmail: jest.fn().mockImplementation(() => Optional.empty()),
+				} as UserInMemoryRepository;
+			});
+			const error = new UserNotFoundError();
+			const userService = new UserService();
+			const wrongEmail = "wrong@email.com";
+
+			expect(() => userService.deleteUserByEmail(wrongEmail)).toThrowError(error.message);
+		});
+
+		it("should delete an user given his email", () => {
+			const user = createRandomUser();
+			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
+				return {
+					deleteByEmail: jest.fn().mockImplementation(() => Optional.of(user.email)),
+				} as UserInMemoryRepository;
+			});
+			const userService = new UserService();
+
+			const deletedUserEmail = userService.deleteUserByEmail(user.email);
+
+			expect(deletedUserEmail).toEqual(user.email);
+		});
+	});
 });
