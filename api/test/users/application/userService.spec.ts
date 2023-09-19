@@ -3,7 +3,7 @@ import { Optional } from "typescript-optional";
 
 import { UserAlreadyExistsError } from "../../../src/users/application/UserAlreadyExistsError";
 import { UserService } from "../../../src/users/application/UserService";
-import { UserFactory } from "../../../src/users/domain/UserFactory";
+import { UserFactory } from "../../../src/users/domain/User";
 import { UserInMemoryRepository } from "../../../src/users/infra/UserInMemoryRepository";
 import { UserRequest } from "../../../src/users/infra/UserRequest";
 import { createRandomUser, userRequestStub } from "../userFixtures";

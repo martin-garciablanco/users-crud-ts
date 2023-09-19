@@ -1,5 +1,4 @@
-import { User } from "../domain/User";
-import { UserFactory } from "../domain/UserFactory";
+import { User, UserFactory } from "../domain/User";
 import { UserRepository } from "../domain/UserRepository";
 import { UserInMemoryRepository } from "../infra/UserInMemoryRepository";
 import { UserRequest, UserRequestFactory } from "../infra/UserRequest";
