@@ -19,6 +19,10 @@ class UserInMemoryRepositoryImpl implements UserRepository {
 
 		return Optional.empty();
 	}
+
+	getAll(): Array<User> {
+		return Array.from(this.users.values());
+	}
 }
 
 export class UserInMemoryRepository {
