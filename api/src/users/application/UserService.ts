@@ -1,7 +1,8 @@
+import { User } from "../domain/User";
 import { UserFactory } from "../domain/UserFactory";
 import { UserRepository } from "../domain/UserRepository";
 import { UserInMemoryRepository } from "../infra/UserInMemoryRepository";
-import { UserRequest } from "../infra/UserRequest";
+import { UserRequest, UserRequestFactory } from "../infra/UserRequest";
 import { UserAlreadyExistsError } from "./UserAlreadyExistsError";
 
 export class UserService {
@@ -19,5 +20,13 @@ export class UserService {
 		}
 
 		throw new UserAlreadyExistsError();
+	}
+
+	getAllUsers(): Array<UserRequest> {
+		const allUsers = this.userRepository.getAll();
+
+		return allUsers.map(({ name, lastName, email, phoneNumber }: User) =>
+			UserRequestFactory.create({ name, lastName, email, phoneNumber }),
+		);
 	}
 }
