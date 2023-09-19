@@ -11,9 +11,13 @@ class UserInMemoryRepositoryImpl implements UserRepository {
 	}
 
 	create(user: User): Optional<User> {
-		this.users.set(user.email, user);
+		if (!this.users.get(user.email)) {
+			this.users.set(user.email, user);
 
-		return Optional.of(user);
+			return Optional.of(user);
+		}
+
+		return Optional.empty();
 	}
 }
 
