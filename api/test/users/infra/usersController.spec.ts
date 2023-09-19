@@ -1,6 +1,7 @@
 import request from "supertest";
 
 import app from "../../../src/app";
+import { UserNotFoundError } from "../../../src/user/application/UserNotFoundError";
 import { UserService } from "../../../src/user/application/UserService";
 import { User } from "../../../src/user/domain/User";
 import { UserRepository } from "../../../src/user/domain/UserRepository";
@@ -76,6 +77,35 @@ describe("UserController", () => {
 					expect(response.body).toContainEqual(userOne);
 					expect(response.body).toContainEqual(userTwo);
 					expect((response.body as UserRequest[]).length).toEqual(2);
+				});
+		});
+	});
+
+	describe("List user by email", () => {
+		it("should show a saved user with same email", async () => {
+			const user = createRandomUserRequest();
+			const userService = new UserService();
+			userService.createUser(user);
+
+			await request(app)
+				.get(`/users/${user.email}`)
+				.send()
+				.expect(200)
+				.then((response) => {
+					expect(response.body).toEqual(user);
+				});
+		});
+
+		it("should return 404 given an email that does not exist", async () => {
+			const wrongEmail = "wrong@email.com";
+			const userNotFoundError = new UserNotFoundError();
+
+			await request(app)
+				.get(`/users/${wrongEmail}`)
+				.send()
+				.expect(404)
+				.then((response) => {
+					expect(response.text).toContain(userNotFoundError.message);
 				});
 		});
 	});
