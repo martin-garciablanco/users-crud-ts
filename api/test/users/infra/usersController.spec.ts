@@ -11,7 +11,7 @@ import { createRandomUserRequest, userRequestStub, userStub } from "../userFixtu
 const usersRequest: UserRequest = userRequestStub;
 
 let usersRepository: UserRepository;
-describe("UsersController", () => {
+describe("UserController", () => {
 	beforeEach(() => {
 		usersRepository = UserInMemoryRepository.initialize();
 		usersRepository.users.clear();

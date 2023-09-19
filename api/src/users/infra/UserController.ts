@@ -4,7 +4,7 @@ import { UserAlreadyExistsError } from "../application/UserAlreadyExistsError";
 import { UserService } from "../application/UserService";
 import { UserRequest } from "./UserRequest";
 
-export const usersEndpoint = (app: Application): void => {
+export const userEndpoints = (app: Application): void => {
 	app.post("/users", (req: Request, res: Response) => {
 		try {
 			const userService = new UserService();
