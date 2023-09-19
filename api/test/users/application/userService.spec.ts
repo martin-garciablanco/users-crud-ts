@@ -2,10 +2,11 @@ import { randomUUID } from "crypto";
 import { Optional } from "typescript-optional";
 
 import { UserAlreadyExistsError } from "../../../src/user/application/UserAlreadyExistsError";
+import { UserNotFoundError } from "../../../src/user/application/UserNotFoundError";
 import { UserService } from "../../../src/user/application/UserService";
 import { UserFactory } from "../../../src/user/domain/User";
 import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
-import { UserRequest } from "../../../src/user/infra/UserRequest";
+import { UserRequest, UserRequestFactory } from "../../../src/user/infra/UserRequest";
 import { createRandomUser, userRequestStub } from "../userFixtures";
 
 describe("UserService", () => {
@@ -78,6 +79,34 @@ describe("UserService", () => {
 			const arrayOfUserRequest = userService.getAllUsers();
 
 			expect(arrayOfUserRequest.length).toEqual(2);
+		});
+	});
+	describe("getUserByEmail", () => {
+		it("should throw an error when user not found", () => {
+			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
+				return {
+					getByEmail: jest.fn().mockImplementation(() => Optional.empty()),
+				} as UserInMemoryRepository;
+			});
+			const error = new UserNotFoundError();
+			const userService = new UserService();
+			const wrongEmail = "wrong@email.com";
+
+			expect(() => userService.getUserByEmail(wrongEmail)).toThrowError(error.message);
+		});
+
+		it("should return an userRequest given a proper email", () => {
+			const user = createRandomUser();
+			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
+				return {
+					getByEmail: jest.fn().mockImplementation(() => Optional.of(user)),
+				} as UserInMemoryRepository;
+			});
+			const userService = new UserService();
+
+			const foundUserRequest = userService.getUserByEmail(user.email);
+
+			expect(foundUserRequest).toEqual(UserRequestFactory.createFromUser(user));
 		});
 	});
 });
