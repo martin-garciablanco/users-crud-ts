@@ -23,6 +23,12 @@ class UserInMemoryRepositoryImpl implements UserRepository {
 	getAll(): Array<User> {
 		return Array.from(this.users.values());
 	}
+
+	getByEmail(email: string): Optional<User> {
+		const user = this.users.get(email);
+
+		return user ? Optional.of(user) : Optional.empty();
+	}
 }
 
 export class UserInMemoryRepository {

@@ -1,3 +1,5 @@
+import { Optional } from "typescript-optional";
+
 import { User } from "../../../src/user/domain/User";
 import { UserRepository } from "../../../src/user/domain/UserRepository";
 import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
@@ -11,6 +13,7 @@ describe("UserRepository", () => {
 		userRepository.users = new Map();
 		user = userStub;
 	});
+
 	it("should be empty at the beginning", () => {
 		expect(userRepository.users.size).toEqual(0);
 	});
@@ -48,6 +51,22 @@ describe("UserRepository", () => {
 			expect(allUsers.length).toEqual(2);
 			expect(allUsers.includes(userOne)).toBeTruthy();
 			expect(allUsers.includes(userTwo)).toBeTruthy();
+		});
+	});
+	describe("getByEmail", () => {
+		it("should return an empty optional if user not found", () => {
+			const wrongEmail = "wrong@mail.com";
+			const user = userRepository.getByEmail(wrongEmail);
+			expect(user).toEqual(Optional.empty());
+		});
+
+		it("should find an user given a proper email", () => {
+			const user = createRandomUser();
+			userRepository.create(user);
+
+			const foundUser = userRepository.getByEmail(user.email).get();
+
+			expect(foundUser).toEqual(user);
 		});
 	});
 });
