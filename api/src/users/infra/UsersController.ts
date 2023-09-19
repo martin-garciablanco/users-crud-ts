@@ -5,10 +5,6 @@ import { UserService } from "../application/UserService";
 import { UserRequest } from "./UserRequest";
 
 export const usersEndpoint = (app: Application): void => {
-	app.get("/users", (req: Request, res: Response) => {
-		return res.status(200).send("You're seeing our users");
-	});
-
 	app.post("/users", (req: Request, res: Response) => {
 		try {
 			const userService = new UserService();
@@ -21,6 +17,17 @@ export const usersEndpoint = (app: Application): void => {
 				return res.status(400).send(userAlreadyExistsError.message);
 			}
 
+			return res.status(500);
+		}
+	});
+
+	app.get("/users", (req: Request, res: Response) => {
+		try {
+			const userService = new UserService();
+			const users = userService.getAllUsers();
+
+			return res.status(200).send(users);
+		} catch (error: unknown) {
 			return res.status(500);
 		}
 	});
