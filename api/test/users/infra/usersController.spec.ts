@@ -7,7 +7,12 @@ import { User } from "../../../src/user/domain/User";
 import { UserRepository } from "../../../src/user/domain/UserRepository";
 import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
 import { UserRequest } from "../../../src/user/infra/UserRequest";
-import { createRandomUserRequest, userRequestStub, userStub } from "../userFixtures";
+import {
+	createRandomUser,
+	createRandomUserRequest,
+	userRequestStub,
+	userStub,
+} from "../userFixtures";
 
 const usersRequest: UserRequest = userRequestStub;
 
@@ -102,6 +107,29 @@ describe("UserController", () => {
 
 			await request(app)
 				.get(`/users/${wrongEmail}`)
+				.send()
+				.expect(404)
+				.then((response) => {
+					expect(response.text).toContain(userNotFoundError.message);
+				});
+		});
+	});
+	describe("Remove user by email", () => {
+		it("should remove a saved user given his email", async () => {
+			const user = createRandomUser();
+			usersRepository.create(user);
+			await request(app).delete(`/users/${user.email}`).expect(200);
+
+			const userRemoved = usersRepository.getByEmail(user.email);
+			expect(userRemoved.isEmpty()).toBeTruthy();
+		});
+
+		it("should return 404 given an email that does not exist", async () => {
+			const wrongEmail = "wrong@email.com";
+			const userNotFoundError = new UserNotFoundError();
+
+			await request(app)
+				.delete(`/users/${wrongEmail}`)
 				.send()
 				.expect(404)
 				.then((response) => {
