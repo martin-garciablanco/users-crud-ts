@@ -69,4 +69,21 @@ describe("UserRepository", () => {
 			expect(foundUser).toEqual(user);
 		});
 	});
+	describe("deleteByEmail", () => {
+		it("should return an empty optional if user not found", () => {
+			const wrongEmail = "wrong@mail.com";
+			const user = userRepository.deleteByEmail(wrongEmail);
+			expect(user).toEqual(Optional.empty());
+		});
+
+		it("should return the email of the deleted user", () => {
+			const user = createRandomUser();
+			userRepository.create(user);
+
+			const deletedUserEmail = userRepository.deleteByEmail(user.email).get();
+
+			expect(deletedUserEmail).toEqual(user.email);
+			expect(userRepository.getAll().length).toEqual(0);
+		});
+	});
 });

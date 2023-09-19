@@ -29,6 +29,17 @@ class UserInMemoryRepositoryImpl implements UserRepository {
 
 		return user ? Optional.of(user) : Optional.empty();
 	}
+
+	deleteByEmail(email: string): Optional<string> {
+		const user = this.users.get(email);
+		if (user) {
+			this.users.delete(email);
+
+			return Optional.of(email);
+		}
+
+		return Optional.empty();
+	}
 }
 
 export class UserInMemoryRepository {

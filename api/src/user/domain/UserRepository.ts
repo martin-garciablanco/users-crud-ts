@@ -7,4 +7,5 @@ export interface UserRepository {
 	create(user: User): Optional<User>;
 	getAll(): Array<User>;
 	getByEmail(email: string): Optional<User>;
+	deleteByEmail(email: string): Optional<string>;
 }
