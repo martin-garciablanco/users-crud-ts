@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { Optional } from "typescript-optional";
 
+import { UserAlreadyExistsError } from "../../../src/users/application/UserAlreadyExistsError";
 import { UserService } from "../../../src/users/application/UserService";
 import { UserFactory } from "../../../src/users/domain/UserFactory";
 import { UserInMemoryRepository } from "../../../src/users/infra/UserInMemoryRepository";
@@ -32,5 +33,19 @@ describe("UserService", () => {
 		expect(repositoryCreateMock).toHaveBeenCalledTimes(1);
 		expect(factoryCreateMock).toHaveBeenCalledTimes(1);
 		expect(createdUser).toEqual(userRequest);
+	});
+
+	it("should through an exeption if user already exist", () => {
+		const userRequest: UserRequest = userRequestStub;
+		UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
+			return {
+				create: jest.fn().mockImplementation(() => Optional.empty()),
+			} as UserInMemoryRepository;
+		});
+
+		const userService = new UserService();
+		const error = new UserAlreadyExistsError();
+
+		expect(() => userService.createUser(userRequest)).toThrowError(error.message);
 	});
 });

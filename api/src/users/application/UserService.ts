@@ -2,6 +2,7 @@ import { UserFactory } from "../domain/UserFactory";
 import { UserRepository } from "../domain/UserRepository";
 import { UserInMemoryRepository } from "../infra/UserInMemoryRepository";
 import { UserRequest } from "../infra/UserRequest";
+import { UserAlreadyExistsError } from "./UserAlreadyExistsError";
 
 export class UserService {
 	private readonly userRepository: UserRepository;
@@ -16,6 +17,7 @@ export class UserService {
 		if (createdUser.isPresent()) {
 			return { name, lastName, phoneNumber, email };
 		}
-		throw new Error("User already exists");
+
+		throw new UserAlreadyExistsError();
 	}
 }
