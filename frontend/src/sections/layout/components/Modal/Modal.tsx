@@ -1,10 +1,10 @@
 import styles from "./Modal.module.scss";
 
-type ModalProps = {
+interface ModalProps {
 	children: string | JSX.Element | JSX.Element[];
 	show: boolean;
 	onClose: () => void;
-};
+}
 
 export function Modal(props: ModalProps) {
 	return (
