@@ -22,7 +22,7 @@ export function UserTemplate({ user, setUser }: UserTemplateProps) {
 			</div>
 			<div>
 				<p>Name</p>
-				<input type="text" value={user.name} onChange={(e) => onUserChange(e, "")} />
+				<input type="text" value={user.name} onChange={(e) => onUserChange(e, "name")} />
 			</div>
 			<div>
 				<p>Last name</p>

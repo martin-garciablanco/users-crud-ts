@@ -8,6 +8,11 @@ import { UpdateUser } from "../../sections/user/components/UpdateUser/UpdateUser
 import { UsersTable } from "../../sections/user/components/UsersTable/UsersTable";
 import styles from "./HomePage.module.scss";
 
+const users: Array<User> = [
+	{ email: "javi@mail.com", name: "Javi", lastName: "Lopez", phoneNumber: "666555444" },
+	{ email: "anna@mail.com", name: "Anna", lastName: "Pisuerga", phoneNumber: "888999777" },
+];
+
 export function HomePage() {
 	const [showUpdateUserModal, setShowUpdateUserModal] = useState(false);
 	const [showCreateUserModal, setShowCreateUserModal] = useState(false);
@@ -53,7 +58,7 @@ export function HomePage() {
 						Create User
 					</button>
 				</div>
-				<UsersTable updateUser={openUpdateUserModal} />
+				<UsersTable users={users} updateUser={openUpdateUserModal} enableSeeDetails={true} />
 
 				<Modal show={showUpdateUserModal} onClose={onCloseUpdateModal}>
 					<UpdateUser

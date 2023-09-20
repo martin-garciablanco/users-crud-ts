@@ -3,16 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { User } from "../../../../domain/User";
 import styles from "./UsersTable.module.scss";
 
-const users: Array<User> = [
-	{ email: "javi@mail.com", name: "Javi", lastName: "Lopez", phoneNumber: "666555444" },
-	{ email: "anna@mail.com", name: "Anna", lastName: "Pisuerga", phoneNumber: "888999777" },
-];
-
 interface UsersTableProps {
+	users: Array<User>;
 	updateUser: (user: User) => void;
+	enableSeeDetails: boolean;
 }
 
-export function UsersTable({ updateUser }: UsersTableProps) {
+export function UsersTable({ users, updateUser, enableSeeDetails }: UsersTableProps) {
 	const navigate = useNavigate();
 
 	const seeUserDetails = (email: string) => {
@@ -41,12 +38,14 @@ export function UsersTable({ updateUser }: UsersTableProps) {
 								<button className={styles.updateUserButton} onClick={() => updateUser(user)}>
 									✏️
 								</button>
-								<button
-									className={styles.updateUserButton}
-									onClick={() => seeUserDetails(user.email)}
-								>
-									📊
-								</button>
+								{enableSeeDetails && (
+									<button
+										className={styles.updateUserButton}
+										onClick={() => seeUserDetails(user.email)}
+									>
+										📊
+									</button>
+								)}
 							</td>
 						</tr>
 					);
