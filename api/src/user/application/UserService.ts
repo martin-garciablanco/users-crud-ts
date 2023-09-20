@@ -47,4 +47,19 @@ export class UserService {
 		}
 		throw new UserNotFoundError(`email: ${email}`);
 	}
+
+	updateUserByEmail(userRequest: UserRequest): UserRequest {
+		const userToUpdate = this.userRepository.getByEmail(userRequest.email);
+		if (userToUpdate.isPresent()) {
+			const userUpdatedOptional = this.userRepository.updateByEmail(userToUpdate.get());
+
+			const userUpdated = userUpdatedOptional.orElseThrow(
+				() => new UserNotFoundError(`email: ${userRequest.email}`),
+			);
+
+			return UserRequestFactory.createFromUser(userUpdated);
+		}
+
+		throw new UserNotFoundError(`email: ${userRequest.email}`);
+	}
 }

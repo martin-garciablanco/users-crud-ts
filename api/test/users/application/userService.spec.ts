@@ -7,7 +7,7 @@ import { UserService } from "../../../src/user/application/UserService";
 import { UserFactory } from "../../../src/user/domain/User";
 import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
 import { UserRequest, UserRequestFactory } from "../../../src/user/infra/UserRequest";
-import { createRandomUser, userRequestStub } from "../userFixtures";
+import { createRandomUser, createRandomUserRequest, userRequestStub } from "../userFixtures";
 
 describe("UserService", () => {
 	describe("createUser", () => {
@@ -136,6 +136,37 @@ describe("UserService", () => {
 			const deletedUserEmail = userService.deleteUserByEmail(user.email);
 
 			expect(deletedUserEmail).toEqual(user.email);
+		});
+	});
+
+	describe("updateUserByEmail", () => {
+		it("should throw an error when user not found", () => {
+			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
+				return {
+					getByEmail: jest.fn().mockImplementation(() => Optional.empty()),
+				} as UserInMemoryRepository;
+			});
+			const userRequestToUpdate = createRandomUserRequest();
+			const error = new UserNotFoundError();
+			const userService = new UserService();
+
+			expect(() => userService.updateUserByEmail(userRequestToUpdate)).toThrowError(error.message);
+		});
+
+		it("should update an user given his email", () => {
+			const user = createRandomUser();
+			const userRequest = UserRequestFactory.createFromUser(user);
+			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
+				return {
+					getByEmail: jest.fn().mockImplementation(() => Optional.of(user.email)),
+					updateByEmail: jest.fn().mockImplementation(() => Optional.of(user)),
+				} as UserInMemoryRepository;
+			});
+
+			const userService = new UserService();
+			const updatedUserEmail = userService.updateUserByEmail(userRequest);
+
+			expect(updatedUserEmail).toEqual(userRequest);
 		});
 	});
 });
