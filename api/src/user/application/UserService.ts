@@ -49,13 +49,20 @@ export class UserService {
 	}
 
 	updateUserByEmail(userRequest: UserRequest): UserRequest {
-		const userToUpdate = this.userRepository.getByEmail(userRequest.email);
-		if (userToUpdate.isPresent()) {
-			const userUpdatedOptional = this.userRepository.updateByEmail(userToUpdate.get());
+		const foundUser = this.userRepository.getByEmail(userRequest.email);
+		if (foundUser.isPresent()) {
+			const userToUpdate: User = {
+				...foundUser.get(),
+				name: userRequest.name,
+				lastName: userRequest.lastName,
+				phoneNumber: userRequest.phoneNumber,
+			};
+			const userUpdatedOptional = this.userRepository.updateByEmail(userToUpdate);
 
 			const userUpdated = userUpdatedOptional.orElseThrow(
 				() => new UserNotFoundError(`email: ${userRequest.email}`),
 			);
+			debugger;
 
 			return UserRequestFactory.createFromUser(userUpdated);
 		}
