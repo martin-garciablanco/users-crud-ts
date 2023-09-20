@@ -2,6 +2,7 @@ import { SetStateAction } from "react";
 
 import { User } from "../../../../domain/User";
 import { UserTemplate } from "../UserTemplate/UserTemplate";
+import styles from "./CreateUser.module.scss";
 
 interface CreateUserProps {
 	userToUpdate: User;
@@ -16,11 +17,17 @@ export function CreateUser({
 	onCreate,
 }: CreateUserProps) {
 	return (
-		<div>
+		<div className={styles.createBlock}>
 			<p>Create User</p>
 			<UserTemplate setUser={setUserToTupdate} user={userToUpdate} />
-			<button onClick={onCancel}>Cancel</button>
-			<button onClick={onCreate}>Create</button>
+			<div className={styles.buttonsBlock}>
+				<button onClick={onCancel} className={styles.button}>
+					Cancel
+				</button>
+				<button onClick={onCreate} className={styles.button}>
+					Create
+				</button>
+			</div>
 		</div>
 	);
 }
