@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { User } from "../../../../domain/User";
 import styles from "./UsersTable.module.scss";
 
@@ -11,6 +13,12 @@ interface UsersTableProps {
 }
 
 export function UsersTable({ updateUser }: UsersTableProps) {
+	const navigate = useNavigate();
+
+	const seeUserDetails = (email: string) => {
+		navigate(`/users?email=${email}`);
+	};
+
 	return (
 		<table>
 			<thead>
@@ -32,6 +40,12 @@ export function UsersTable({ updateUser }: UsersTableProps) {
 							<td>
 								<button className={styles.updateUserButton} onClick={() => updateUser(user)}>
 									✏️
+								</button>
+								<button
+									className={styles.updateUserButton}
+									onClick={() => seeUserDetails(user.email)}
+								>
+									📊
 								</button>
 							</td>
 						</tr>
