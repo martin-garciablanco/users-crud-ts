@@ -76,4 +76,26 @@ export const userEndpoints = (app: Application): void => {
 			return res.status(500);
 		}
 	});
+
+	app.put("/users/:email", (req: Request, res: Response) => {
+		try {
+			const { email } = req.params;
+			if (!email) {
+				throw new UserNotFoundError("email required");
+			}
+
+			const userService = new UserService();
+			const updatedUserRequest = userService.updateUserByEmail(req.body as UserRequest);
+
+			return res.status(200).send(updatedUserRequest);
+		} catch (error: unknown) {
+			const userNotFoundError = new UserNotFoundError();
+
+			if (error instanceof Error && error.message.includes(userNotFoundError.message)) {
+				return res.status(404).send(error.message);
+			}
+
+			return res.status(500);
+		}
+	});
 };

@@ -114,6 +114,7 @@ describe("UserController", () => {
 				});
 		});
 	});
+
 	describe("Remove user by email", () => {
 		it("should remove a saved user given his email", async () => {
 			const user = createRandomUser();
@@ -131,6 +132,43 @@ describe("UserController", () => {
 			await request(app)
 				.delete(`/users/${wrongEmail}`)
 				.send()
+				.expect(404)
+				.then((response) => {
+					expect(response.text).toContain(userNotFoundError.message);
+				});
+		});
+	});
+
+	describe("Update user by email", () => {
+		it("should update a saved user given his email", async () => {
+			const userRequest = createRandomUserRequest();
+			const userRequestToUpdate = {
+				...userRequest,
+				lastName: "lastName",
+			};
+			const userService = new UserService();
+			userService.createUser(userRequest);
+
+			await request(app)
+				.put(`/users/${userRequest.email}`)
+				.send(userRequestToUpdate)
+				.expect(200)
+				.then((response) => {
+					expect(response.body).toEqual(userRequestToUpdate);
+				});
+
+			const userUpdated = userService.getUserByEmail(userRequest.email);
+			expect(userUpdated).toEqual(userRequestToUpdate);
+		});
+
+		it("should return 404 given an email that does not exist", async () => {
+			const wrongEmail = "wrong@email.com";
+			const userRequest = createRandomUserRequest();
+			const userNotFoundError = new UserNotFoundError();
+
+			await request(app)
+				.put(`/users/${wrongEmail}`)
+				.send(userRequest)
 				.expect(404)
 				.then((response) => {
 					expect(response.text).toContain(userNotFoundError.message);
