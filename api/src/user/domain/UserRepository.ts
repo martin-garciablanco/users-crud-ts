@@ -8,4 +8,5 @@ export interface UserRepository {
 	getAll(): Array<User>;
 	getByEmail(email: string): Optional<User>;
 	deleteByEmail(email: string): Optional<string>;
+	updateByEmail(user: User): Optional<User>;
 }

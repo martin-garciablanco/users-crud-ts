@@ -86,4 +86,24 @@ describe("UserRepository", () => {
 			expect(userRepository.getAll().length).toEqual(0);
 		});
 	});
+
+	describe("updateByEmail", () => {
+		it("should return an empty optional if user not found", () => {
+			const userToUpdate = createRandomUser();
+			const user = userRepository.updateByEmail(userToUpdate);
+			expect(user).toEqual(Optional.empty());
+		});
+
+		it("should return the updated user", () => {
+			const user = createRandomUser();
+			userRepository.create(user);
+			expect(userRepository.getAll().length).toEqual(1);
+			const userToUpdate = { ...user, name: "updatedName" };
+
+			const updatedUser = userRepository.updateByEmail(userToUpdate).get();
+
+			expect(userRepository.getAll().length).toEqual(1);
+			expect(updatedUser).toEqual(userToUpdate);
+		});
+	});
 });

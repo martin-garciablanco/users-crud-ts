@@ -30,6 +30,24 @@ class UserInMemoryRepositoryImpl implements UserRepository {
 		return user ? Optional.of(user) : Optional.empty();
 	}
 
+	updateByEmail(userToUpdate: User): Optional<User> {
+		const foundUser = this.users.get(userToUpdate.email);
+		if (foundUser) {
+			const updatedUser: User = {
+				...foundUser,
+				name: userToUpdate.name,
+				lastName: userToUpdate.lastName,
+				phoneNumber: userToUpdate.phoneNumber,
+			};
+
+			this.users.set(userToUpdate.email, updatedUser);
+
+			return Optional.of(updatedUser);
+		}
+
+		return Optional.empty();
+	}
+
 	deleteByEmail(email: string): Optional<string> {
 		const user = this.users.get(email);
 		if (user) {
