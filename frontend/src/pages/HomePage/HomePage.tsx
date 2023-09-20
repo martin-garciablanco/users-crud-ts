@@ -1,11 +1,11 @@
 import { useState } from "react";
 
+import { Modal } from "../../components/layout/components/Modal/Modal";
+import { NavBar } from "../../components/layout/components/NavBar/NavBar";
+import { CreateUser } from "../../components/user/CreateUser/CreateUser";
+import { UpdateUser } from "../../components/user/UpdateUser/UpdateUser";
+import { UsersTable } from "../../components/user/UsersTable/UsersTable";
 import { User } from "../../domain/User";
-import { Modal } from "../../sections/layout/components/Modal/Modal";
-import { NavBar } from "../../sections/layout/components/NavBar/NavBar";
-import { CreateUser } from "../../sections/user/components/CreateUser/CreateUser";
-import { UpdateUser } from "../../sections/user/components/UpdateUser/UpdateUser";
-import { UsersTable } from "../../sections/user/components/UsersTable/UsersTable";
 import styles from "./HomePage.module.scss";
 
 const users: Array<User> = [

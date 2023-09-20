@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { User } from "../../../../domain/User";
+import { User } from "../../../domain/User";
 import styles from "./UsersTable.module.scss";
 
 interface UsersTableProps {

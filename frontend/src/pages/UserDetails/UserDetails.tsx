@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { Modal } from "../../components/layout/components/Modal/Modal";
+import { NavBar } from "../../components/layout/components/NavBar/NavBar";
+import { UpdateUser } from "../../components/user/UpdateUser/UpdateUser";
+import { UsersTable } from "../../components/user/UsersTable/UsersTable";
 import { User } from "../../domain/User";
-import { Modal } from "../../sections/layout/components/Modal/Modal";
-import { NavBar } from "../../sections/layout/components/NavBar/NavBar";
-import { UpdateUser } from "../../sections/user/components/UpdateUser/UpdateUser";
-import { UsersTable } from "../../sections/user/components/UsersTable/UsersTable";
 import styles from "./UserDetails.module.scss";
 
 export function UserDetails() {

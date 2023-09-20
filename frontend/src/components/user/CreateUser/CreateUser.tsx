@@ -1,6 +1,6 @@
 import { SetStateAction } from "react";
 
-import { User } from "../../../../domain/User";
+import { User } from "../../../domain/User";
 import { UserTemplate } from "../UserTemplate/UserTemplate";
 import styles from "./CreateUser.module.scss";
 

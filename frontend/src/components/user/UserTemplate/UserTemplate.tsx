@@ -1,6 +1,6 @@
 import { ChangeEvent, SetStateAction } from "react";
 
-import { User } from "../../../../domain/User";
+import { User } from "../../../domain/User";
 import styles from "./UserTemplate.module.scss";
 
 interface UserTemplateProps {
