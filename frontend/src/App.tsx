@@ -1,17 +1,19 @@
-import { UserCard } from "./sections/user/components/UserCard/UserCard";
-import { useUsers } from "./sections/user/components/UserCard/useUsers";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import styles from "./App.module.scss";
+import { HomePage } from "./pages/HomePage/HomePage";
+
+const router = createBrowserRouter([
+	{
+		path: "/",
+		element: <HomePage />,
+	},
+]);
 
 export function App() {
-	const users = useUsers();
-
 	return (
-		<div className="App">
-			<h3>Dashboard of users</h3>
-			<h2>Current users</h2>
-
-			{users.map((user) => (
-				<UserCard key={user.name} user={user} />
-			))}
+		<div className={styles.app}>
+			<RouterProvider router={router} />
 		</div>
 	);
 }
