@@ -1,3 +1,5 @@
+import { UUID } from "crypto";
+
 import { Event } from "../domain/Event";
 import { EventRepository } from "../domain/EventRepository";
 
@@ -12,6 +14,10 @@ class EventInMemoryRepositoryImpl implements EventRepository {
 		this.events.push(event);
 
 		return event;
+	}
+
+	getByUserId(userId: UUID): Array<Event> {
+		return this.events.filter((event) => event.userId === userId);
 	}
 }
 
