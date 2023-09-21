@@ -1,20 +1,21 @@
-import { useNavigate } from "react-router-dom";
 
 import { User } from "../../../domain/User";
 import styles from "./UsersTable.module.scss";
 
 interface UsersTableProps {
 	users: Array<User>;
-	updateUser: (user: User) => void;
+	update: (user: User) => void;
+	remove: (user: User) => void;
+	seeDetails?: (user: User) => void;
 	enableSeeDetails: boolean;
 }
 
-export function UsersTable({ users, updateUser, enableSeeDetails }: UsersTableProps) {
-	const navigate = useNavigate();
-
-	const seeUserDetails = (email: string) => {
-		navigate(`/users?email=${email}`);
-	};
+export function UsersTable({ users, update: updateUser, enableSeeDetails, remove: removeUser, seeDetails }: UsersTableProps) {
+	const onSeeDetails = (user: User) => {
+		if(seeDetails) {
+			seeDetails(user)
+		}
+	}
 
 	return (
 		<table>
@@ -27,9 +28,9 @@ export function UsersTable({ users, updateUser, enableSeeDetails }: UsersTablePr
 				</tr>
 			</thead>
 			<tbody>
-				{users.map((user) => {
+				{users.map((user, index) => {
 					return (
-						<tr key={user.email}>
+						<tr key={index}>
 							<td>{user.email}</td>
 							<td>{user.name}</td>
 							<td>{user.lastName}</td>
@@ -38,10 +39,13 @@ export function UsersTable({ users, updateUser, enableSeeDetails }: UsersTablePr
 								<button className={styles.updateUserButton} onClick={() => updateUser(user)}>
 									✏️
 								</button>
+								<button className={styles.updateUserButton} onClick={() => removeUser(user)}>
+									❌
+								</button>
 								{enableSeeDetails && (
 									<button
 										className={styles.updateUserButton}
-										onClick={() => seeUserDetails(user.email)}
+										onClick={() => onSeeDetails(user)}
 									>
 										📊
 									</button>
