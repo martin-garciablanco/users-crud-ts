@@ -10,9 +10,6 @@ export function NavBar() {
 				<Link to={"/"} className={styles.menuItem}>
 					Home
 				</Link>
-				<Link to={"/metrics"} className={styles.menuItem}>
-					Metrics
-				</Link>
 			</div>
 		</header>
 	);
