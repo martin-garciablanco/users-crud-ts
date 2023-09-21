@@ -62,7 +62,6 @@ export class UserService {
 			const userUpdated = userUpdatedOptional.orElseThrow(
 				() => new UserNotFoundError(`email: ${userRequest.email}`),
 			);
-			debugger;
 
 			return UserRequestFactory.createFromUser(userUpdated);
 		}
