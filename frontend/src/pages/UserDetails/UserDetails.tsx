@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { Modal } from "../../components/layout/components/Modal/Modal";
-import { ModalConfirmation } from "../../components/layout/components/ModalConfirmation/ModalConfirmation";
-import { NavBar } from "../../components/layout/components/NavBar/NavBar";
+import { Modal } from "../../components/layout/Modal/Modal";
+import { ModalConfirmation } from "../../components/layout/ModalConfirmation/ModalConfirmation";
+import { NavBar } from "../../components/layout/NavBar/NavBar";
 import { UpdateUser } from "../../components/user/UpdateUser/UpdateUser";
 import { UsersTable } from "../../components/user/UsersTable/UsersTable";
 import { User } from "../../domain/User";
