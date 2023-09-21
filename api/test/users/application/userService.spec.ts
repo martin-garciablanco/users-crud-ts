@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { Optional } from "typescript-optional";
 
+import { EventService } from "../../../src/event/application/EventService";
 import { UserAlreadyExistsError } from "../../../src/user/application/UserAlreadyExistsError";
 import { UserNotFoundError } from "../../../src/user/application/UserNotFoundError";
 import { UserService } from "../../../src/user/application/UserService";
@@ -8,6 +9,9 @@ import { UserFactory } from "../../../src/user/domain/User";
 import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
 import { UserRequest, UserRequestFactory } from "../../../src/user/infra/UserRequest";
 import { createRandomUser, createRandomUserRequest, userRequestStub } from "../userFixtures";
+
+jest.mock("../../../src/event/application/EventService");
+const eventService = EventService as jest.Mock<EventService>;
 
 describe("UserService", () => {
 	describe("createUser", () => {
@@ -22,7 +26,13 @@ describe("UserService", () => {
 			};
 			const repositoryCreateMock = jest.fn().mockImplementation(() => Optional.of(userCreatedStub));
 			const factoryCreateMock = jest.fn().mockImplementation(() => userCreatedStub);
+			const createEventMock = jest.fn();
 			UserFactory.create = factoryCreateMock;
+			eventService.mockImplementation(() => {
+				return {
+					createEvent: createEventMock,
+				} as unknown as EventService;
+			});
 			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
 				return {
 					create: repositoryCreateMock,
@@ -34,6 +44,7 @@ describe("UserService", () => {
 
 			expect(repositoryCreateMock).toHaveBeenCalledTimes(1);
 			expect(factoryCreateMock).toHaveBeenCalledTimes(1);
+			expect(createEventMock).toHaveBeenCalledTimes(1);
 			expect(createdUser).toEqual(userRequest);
 		});
 

@@ -1,3 +1,6 @@
+import { UUID } from "crypto";
+
+import { EventService } from "../../event/application/EventService";
 import { User, UserFactory } from "../domain/User";
 import { UserRepository } from "../domain/UserRepository";
 import { UserInMemoryRepository } from "../infra/UserInMemoryRepository";
@@ -7,15 +10,19 @@ import { UserNotFoundError } from "./UserNotFoundError";
 
 export class UserService {
 	private readonly userRepository: UserRepository;
+	private readonly eventService: EventService;
 
 	constructor() {
 		this.userRepository = UserInMemoryRepository.initialize();
+		this.eventService = new EventService();
 	}
 
 	createUser({ name, lastName, phoneNumber, email }: UserRequest): UserRequest {
 		const user = UserFactory.create({ name, lastName, phoneNumber, email });
 		const createdUser = this.userRepository.create(user);
 		if (createdUser.isPresent()) {
+			this.createNewUserEvent(createdUser.get().id);
+
 			return { name, lastName, phoneNumber, email };
 		}
 
@@ -67,5 +74,10 @@ export class UserService {
 		}
 
 		throw new UserNotFoundError(`email: ${userRequest.email}`);
+	}
+
+	private createNewUserEvent(userId: UUID): void {
+		const newUserEventMessage = "User Created";
+		this.eventService.createEvent(userId, "CREATE", newUserEventMessage);
 	}
 }
