@@ -1,5 +1,3 @@
-import { UUID } from "crypto";
-
 import { EventService } from "../../event/application/EventService";
 import { User, UserFactory } from "../domain/User";
 import { UserRepository } from "../domain/UserRepository";
@@ -21,7 +19,7 @@ export class UserService {
 		const user = UserFactory.create({ name, lastName, phoneNumber, email });
 		const createdUser = this.userRepository.create(user);
 		if (createdUser.isPresent()) {
-			this.createNewUserEvent(createdUser.get().id);
+			this.createNewUserEvent(createdUser.get());
 
 			return { name, lastName, phoneNumber, email };
 		}
@@ -65,6 +63,7 @@ export class UserService {
 				phoneNumber: userRequest.phoneNumber,
 			};
 			const userUpdatedOptional = this.userRepository.updateByEmail(userToUpdate);
+			this.createUpdatedUserEvent(foundUser.get());
 
 			const userUpdated = userUpdatedOptional.orElseThrow(
 				() => new UserNotFoundError(`email: ${userRequest.email}`),
@@ -76,8 +75,13 @@ export class UserService {
 		throw new UserNotFoundError(`email: ${userRequest.email}`);
 	}
 
-	private createNewUserEvent(userId: UUID): void {
+	private createNewUserEvent(user: User): void {
 		const newUserEventMessage = "User Created";
-		this.eventService.createEvent(userId, "CREATE", newUserEventMessage);
+		this.eventService.createEvent(user.id, "CREATE", newUserEventMessage);
+	}
+
+	private createUpdatedUserEvent(oldUser: User): void {
+		const updatedUserEventMessage = `User updated, old user info: ${String(oldUser)}`;
+		this.eventService.createEvent(oldUser.id, "UPDATE", updatedUserEventMessage);
 	}
 }

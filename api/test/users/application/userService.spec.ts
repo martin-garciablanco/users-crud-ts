@@ -12,6 +12,7 @@ import { createRandomUser, createRandomUserRequest, userRequestStub } from "../u
 
 jest.mock("../../../src/event/application/EventService");
 const eventService = EventService as jest.Mock<EventService>;
+const createEventMock = jest.fn();
 
 describe("UserService", () => {
 	describe("createUser", () => {
@@ -26,7 +27,6 @@ describe("UserService", () => {
 			};
 			const repositoryCreateMock = jest.fn().mockImplementation(() => Optional.of(userCreatedStub));
 			const factoryCreateMock = jest.fn().mockImplementation(() => userCreatedStub);
-			const createEventMock = jest.fn();
 			UserFactory.create = factoryCreateMock;
 			eventService.mockImplementation(() => {
 				return {
@@ -167,6 +167,11 @@ describe("UserService", () => {
 		it("should update an user given his email", () => {
 			const user = createRandomUser();
 			const userRequest = UserRequestFactory.createFromUser(user);
+			eventService.mockImplementation(() => {
+				return {
+					createEvent: createEventMock,
+				} as unknown as EventService;
+			});
 			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
 				return {
 					getByEmail: jest.fn().mockImplementation(() => Optional.of(user.email)),
@@ -177,6 +182,7 @@ describe("UserService", () => {
 			const userService = new UserService();
 			const updatedUserEmail = userService.updateUserByEmail(userRequest);
 
+			expect(createEventMock).toHaveBeenCalledTimes(1);
 			expect(updatedUserEmail).toEqual(userRequest);
 		});
 	});
