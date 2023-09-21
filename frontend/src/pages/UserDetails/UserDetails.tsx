@@ -21,10 +21,10 @@ export function UserDetails() {
 	const userDetails = useAppSelector((state) => state.users.userDetails);
 	const dispatch = useAppDispatch();
 
-const loadData = async (email: string) => {
-	await dispatch(getUserDetails(email));
-	setUser(userDetails);
-}
+	const loadData = async (email: string) => {
+		await dispatch(getUserDetails(email));
+		setUser(userDetails);
+	};
 
 	useEffect(() => {
 		const query = new URLSearchParams(search);
@@ -32,7 +32,7 @@ const loadData = async (email: string) => {
 		if (!email) {
 			navigate("/");
 		} else {
-			userDetails.email ? setUser(userDetails) : loadData(email)
+			userDetails.email ? setUser(userDetails) : loadData(email);
 		}
 	}, [search, navigate, userDetails, loadData]);
 
@@ -48,7 +48,7 @@ const loadData = async (email: string) => {
 
 	const closeRemoveUserModal = () => {
 		setShowRemoveUserModal(false);
-	}
+	};
 
 	const modifyUser = async () => {
 		await dispatch(updateUser(userToUpdate));
@@ -59,13 +59,13 @@ const loadData = async (email: string) => {
 		await dispatch(removeUser(userToUpdate));
 		await dispatch(getAllUsers());
 		closeRemoveUserModal();
-		navigate('/')
-	}
+		navigate("/");
+	};
 
 	const removeUserModal = (user: User) => {
 		setUserToUpdate(user);
 		setShowRemoveUserModal(true);
-	}
+	};
 
 	return (
 		<>
@@ -73,7 +73,12 @@ const loadData = async (email: string) => {
 			<main className={styles.main}>
 				<div className={styles.homeHeader}>
 					<h2>User details</h2>
-					<UsersTable users={[user]} update={openUpdateUserModal} remove={removeUserModal} enableSeeDetails={false} />
+					<UsersTable
+						users={[user]}
+						update={openUpdateUserModal}
+						remove={removeUserModal}
+						enableSeeDetails={false}
+					/>
 				</div>
 			</main>
 			<Modal show={showUpdateUserModal} onClose={closeUpdateUserModal}>
@@ -85,13 +90,10 @@ const loadData = async (email: string) => {
 				/>
 			</Modal>
 			<Modal show={showRemoveUserModal} onClose={closeRemoveUserModal}>
-					<ModalConfirmation
-					onAccept={deleteUser}
-					onCancel={closeRemoveUserModal}
-					>
-						{`Do you want to permanetly delete ${userToUpdate.email}`}
-					</ModalConfirmation>
-				</Modal>
+				<ModalConfirmation onAccept={deleteUser} onCancel={closeRemoveUserModal}>
+					{`Do you want to permanetly delete ${userToUpdate.email}`}
+				</ModalConfirmation>
+			</Modal>
 		</>
 	);
 }

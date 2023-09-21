@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router";
+
 import { Modal } from "../../components/layout/Modal/Modal";
 import { ModalConfirmation } from "../../components/layout/ModalConfirmation/ModalConfirmation";
 import { NavBar } from "../../components/layout/NavBar/NavBar";
@@ -9,7 +9,13 @@ import { UpdateUser } from "../../components/user/UpdateUser/UpdateUser";
 import { UsersTable } from "../../components/user/UsersTable/UsersTable";
 import { User } from "../../domain/User";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { createUser, getAllUsers, removeUser, setUserDetails, updateUser } from "../../store/users/usersSlice";
+import {
+	createUser,
+	getAllUsers,
+	removeUser,
+	setUserDetails,
+	updateUser,
+} from "../../store/users/usersSlice";
 import styles from "./HomePage.module.scss";
 
 export function HomePage() {
@@ -35,7 +41,7 @@ export function HomePage() {
 
 	const closeRemoveUserModal = () => {
 		setShowRemoveUserModal(false);
-	}
+	};
 
 	const openUpdateUserModal = (user: User) => {
 		setUserToUpdate(user);
@@ -50,7 +56,7 @@ export function HomePage() {
 	const removeUserModal = (user: User) => {
 		setUserToUpdate(user);
 		setShowRemoveUserModal(true);
-	}
+	};
 
 	const modifyUser = async () => {
 		await dispatch(updateUser(userToUpdate));
@@ -68,7 +74,7 @@ export function HomePage() {
 		await dispatch(removeUser(userToUpdate));
 		await dispatch(getAllUsers());
 		closeRemoveUserModal();
-	}
+	};
 
 	const seeUserDetails = (user: User) => {
 		dispatch(setUserDetails(user));
@@ -85,7 +91,13 @@ export function HomePage() {
 						Create User
 					</button>
 				</div>
-				<UsersTable users={users} update={openUpdateUserModal} remove={removeUserModal} seeDetails={seeUserDetails} enableSeeDetails={true} />
+				<UsersTable
+					users={users}
+					update={openUpdateUserModal}
+					remove={removeUserModal}
+					seeDetails={seeUserDetails}
+					enableSeeDetails={true}
+				/>
 
 				<Modal show={showUpdateUserModal} onClose={closeUpdateModal}>
 					<UpdateUser
@@ -104,10 +116,7 @@ export function HomePage() {
 					/>
 				</Modal>
 				<Modal show={showRemoveUserModal} onClose={closeRemoveUserModal}>
-					<ModalConfirmation
-					onAccept={deleteUser}
-					onCancel={closeRemoveUserModal}
-					>
+					<ModalConfirmation onAccept={deleteUser} onCancel={closeRemoveUserModal}>
 						{`Do you want to permanetly delete ${userToUpdate.email}`}
 					</ModalConfirmation>
 				</Modal>

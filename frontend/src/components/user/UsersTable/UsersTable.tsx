@@ -1,4 +1,3 @@
-
 import { User } from "../../../domain/User";
 import styles from "./UsersTable.module.scss";
 
@@ -10,12 +9,18 @@ interface UsersTableProps {
 	enableSeeDetails: boolean;
 }
 
-export function UsersTable({ users, update: updateUser, enableSeeDetails, remove: removeUser, seeDetails }: UsersTableProps) {
+export function UsersTable({
+	users,
+	update: updateUser,
+	enableSeeDetails,
+	remove: removeUser,
+	seeDetails,
+}: UsersTableProps) {
 	const onSeeDetails = (user: User) => {
-		if(seeDetails) {
-			seeDetails(user)
+		if (seeDetails) {
+			seeDetails(user);
 		}
-	}
+	};
 
 	return (
 		<table>
@@ -43,10 +48,7 @@ export function UsersTable({ users, update: updateUser, enableSeeDetails, remove
 									❌
 								</button>
 								{enableSeeDetails && (
-									<button
-										className={styles.updateUserButton}
-										onClick={() => onSeeDetails(user)}
-									>
+									<button className={styles.updateUserButton} onClick={() => onSeeDetails(user)}>
 										📊
 									</button>
 								)}

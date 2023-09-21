@@ -3,7 +3,7 @@ import {
 	createSlice,
 	CreateSliceOptions,
 	PayloadAction,
-	SliceCaseReducers
+	SliceCaseReducers,
 } from "@reduxjs/toolkit";
 
 import { User } from "../../domain/User";
@@ -24,7 +24,7 @@ export const createUser = createAsyncThunk("CreateUser", async (user: User): Pro
 	await fetch("http://localhost:3003/users", {
 		method: "POST",
 		body: JSON.stringify(user),
-		headers: {"Content-Type": "application/json"}
+		headers: { "Content-Type": "application/json" },
 	});
 });
 
@@ -32,9 +32,10 @@ export const updateUser = createAsyncThunk("UpdateUser", async (user: User): Pro
 	const response = await fetch(`http://localhost:3003/users/${user.email}`, {
 		method: "PUT",
 		body: JSON.stringify(user),
-		headers: {"Content-Type": "application/json"}
+		headers: { "Content-Type": "application/json" },
 	});
 	const userUpdated = await response.json();
+
 	return userUpdated;
 });
 
@@ -44,14 +45,19 @@ export const removeUser = createAsyncThunk("RemoveUser", async (user: User): Pro
 	});
 });
 
-export const getUserDetails = createAsyncThunk("GetUserDetails", async (email: string): Promise<User> => {
-	const response = await fetch(`http://localhost:3003/users/${email}`);
-	return await response.json()
-});
+export const getUserDetails = createAsyncThunk(
+	"GetUserDetails",
+	async (email: string): Promise<User> => {
+		const response = await fetch(`http://localhost:3003/users/${email}`);
+
+		return await response.json();
+	}
+);
 
 export const getAllUsers = createAsyncThunk("GetAllUsers", async (): Promise<Array<User>> => {
 	const response = await fetch("http://localhost:3003/users");
 	const users = response.json();
+
 	return users;
 });
 
@@ -60,7 +66,7 @@ const reducerOptions: CreateSliceOptions<UsersState, SliceCaseReducers<UsersStat
 	initialState,
 	reducers: {
 		setUserDetails: (state, action: PayloadAction<User>) => {
-      state.userDetails = action.payload;
+			state.userDetails = action.payload;
 		},
 	},
 	extraReducers: (builder) => {
