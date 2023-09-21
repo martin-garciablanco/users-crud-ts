@@ -6,6 +6,7 @@ import {
 	SliceCaseReducers,
 } from "@reduxjs/toolkit";
 
+import { UserRestFullRepository } from "../../api/UserRestFullRepository";
 import { User } from "../../domain/User";
 
 interface UsersState {
@@ -21,44 +22,36 @@ const initialState: UsersState = {
 };
 
 export const createUser = createAsyncThunk("CreateUser", async (user: User): Promise<void> => {
-	await fetch("http://localhost:3003/users", {
-		method: "POST",
-		body: JSON.stringify(user),
-		headers: { "Content-Type": "application/json" },
-	});
+	const userRepository = new UserRestFullRepository();
+
+	return userRepository.createUser(user);
 });
 
 export const updateUser = createAsyncThunk("UpdateUser", async (user: User): Promise<User> => {
-	const response = await fetch(`http://localhost:3003/users/${user.email}`, {
-		method: "PUT",
-		body: JSON.stringify(user),
-		headers: { "Content-Type": "application/json" },
-	});
-	const userUpdated = await response.json();
+	const userRepository = new UserRestFullRepository();
 
-	return userUpdated;
+	return userRepository.updateUser(user);
 });
 
 export const removeUser = createAsyncThunk("RemoveUser", async (user: User): Promise<void> => {
-	await fetch(`http://localhost:3003/users/${user.email}`, {
-		method: "DELETE",
-	});
+	const userRepository = new UserRestFullRepository();
+
+	return userRepository.removeUser(user);
 });
 
 export const getUserDetails = createAsyncThunk(
 	"GetUserDetails",
 	async (email: string): Promise<User> => {
-		const response = await fetch(`http://localhost:3003/users/${email}`);
+		const userRepository = new UserRestFullRepository();
 
-		return await response.json();
+		return userRepository.getUserByEmail(email);
 	}
 );
 
 export const getAllUsers = createAsyncThunk("GetAllUsers", async (): Promise<Array<User>> => {
-	const response = await fetch("http://localhost:3003/users");
-	const users = response.json();
+	const userRepository = new UserRestFullRepository();
 
-	return users;
+	return userRepository.getAllUsers();
 });
 
 const reducerOptions: CreateSliceOptions<UsersState, SliceCaseReducers<UsersState>, string> = {
