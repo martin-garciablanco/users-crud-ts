@@ -23,4 +23,19 @@ describe("EventService", () => {
 		expect(factoryCreateMock).toHaveBeenCalledTimes(1);
 		expect(createdEvent).toEqual(event);
 	});
+
+	it("should return events given an userId", () => {
+		const event = eventStub;
+		const getByIdMock = jest.fn().mockImplementation(() => [event]);
+		EventInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
+			return {
+				getByUserId: getByIdMock,
+			} as EventInMemoryRepository;
+		});
+		const eventService = new EventService();
+
+		const events = eventService.getEventsByUserIs(event.userId);
+		expect(events.length).toEqual(1);
+		expect(events[0]).toEqual(event);
+	});
 });

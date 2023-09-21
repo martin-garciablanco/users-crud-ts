@@ -16,4 +16,8 @@ export class EventService {
 
 		return this.eventRepository.create(event);
 	}
+
+	getEventsByUserIs(userId: UUID): Array<Event> {
+		return this.eventRepository.getByUserId(userId);
+	}
 }
