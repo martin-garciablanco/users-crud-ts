@@ -22,7 +22,7 @@ export function UserTemplate({ user, setUser }: UserTemplateProps) {
 				<input
 					className={styles.input}
 					type="text"
-					value={user.email}
+					value={user.email || ""}
 					onChange={(e) => onUserChange(e, "email")}
 				/>
 			</div>
@@ -31,7 +31,7 @@ export function UserTemplate({ user, setUser }: UserTemplateProps) {
 				<input
 					className={styles.input}
 					type="text"
-					value={user.name}
+					value={user.name || ""}
 					onChange={(e) => onUserChange(e, "name")}
 				/>
 			</div>
@@ -40,7 +40,7 @@ export function UserTemplate({ user, setUser }: UserTemplateProps) {
 				<input
 					className={styles.input}
 					type="text"
-					value={user.lastName}
+					value={user.lastName || ""}
 					onChange={(e) => onUserChange(e, "lastName")}
 				/>
 			</div>
@@ -49,7 +49,7 @@ export function UserTemplate({ user, setUser }: UserTemplateProps) {
 				<input
 					className={styles.input}
 					type="text"
-					value={user.phoneNumber}
+					value={user.phoneNumber || ""}
 					onChange={(e) => onUserChange(e, "phoneNumber")}
 				/>
 			</div>
