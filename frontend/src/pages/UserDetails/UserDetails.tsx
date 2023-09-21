@@ -2,19 +2,29 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { Modal } from "../../components/layout/components/Modal/Modal";
+import { ModalConfirmation } from "../../components/layout/components/ModalConfirmation/ModalConfirmation";
 import { NavBar } from "../../components/layout/components/NavBar/NavBar";
 import { UpdateUser } from "../../components/user/UpdateUser/UpdateUser";
 import { UsersTable } from "../../components/user/UsersTable/UsersTable";
 import { User } from "../../domain/User";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { getAllUsers, getUserDetails, removeUser, updateUser } from "../../store/users/usersSlice";
 import styles from "./UserDetails.module.scss";
 
 export function UserDetails() {
 	const { search } = useLocation();
 	const navigate = useNavigate();
-	const [email, setEmail] = useState<string>("");
 	const [user, setUser] = useState<User>({} as User);
 	const [userToUpdate, setUserToUpdate] = useState<User>({} as User);
 	const [showUpdateUserModal, setShowUpdateUserModal] = useState(false);
+	const [showRemoveUserModal, setShowRemoveUserModal] = useState(false);
+	const userDetails = useAppSelector((state) => state.users.userDetails);
+	const dispatch = useAppDispatch();
+
+const loadData = async (email: string) => {
+	await dispatch(getUserDetails(email));
+	setUser(userDetails);
+}
 
 	useEffect(() => {
 		const query = new URLSearchParams(search);
@@ -22,16 +32,9 @@ export function UserDetails() {
 		if (!email) {
 			navigate("/");
 		} else {
-			setEmail(email);
-			// getUser
-			setUser({
-				email: "javi@mail.com",
-				name: "Javi",
-				lastName: "Lopez",
-				phoneNumber: "666555444",
-			});
+			userDetails.email ? setUser(userDetails) : loadData(email)
 		}
-	}, [search, navigate]);
+	}, [search, navigate, userDetails, loadData]);
 
 	const openUpdateUserModal = () => {
 		const userToUpdate = { ...user };
@@ -39,14 +42,30 @@ export function UserDetails() {
 		setShowUpdateUserModal(true);
 	};
 
-	const onCloseUpdateModal = () => {
+	const closeUpdateUserModal = () => {
 		setShowUpdateUserModal(false);
 	};
 
-	const onUpdateUser = () => {
-		// update user on api
+	const closeRemoveUserModal = () => {
+		setShowRemoveUserModal(false);
+	}
+
+	const modifyUser = async () => {
+		await dispatch(updateUser(userToUpdate));
 		setShowUpdateUserModal(false);
 	};
+
+	const deleteUser = async () => {
+		await dispatch(removeUser(userToUpdate));
+		await dispatch(getAllUsers());
+		closeRemoveUserModal();
+		navigate('/')
+	}
+
+	const removeUserModal = (user: User) => {
+		setUserToUpdate(user);
+		setShowRemoveUserModal(true);
+	}
 
 	return (
 		<>
@@ -54,19 +73,25 @@ export function UserDetails() {
 			<main className={styles.main}>
 				<div className={styles.homeHeader}>
 					<h2>User details</h2>
-					<h3>eeemail {email}</h3>
-
-					<UsersTable users={[user]} updateUser={openUpdateUserModal} enableSeeDetails={false} />
+					<UsersTable users={[user]} update={openUpdateUserModal} remove={removeUserModal} enableSeeDetails={false} />
 				</div>
 			</main>
-			<Modal show={showUpdateUserModal} onClose={onCloseUpdateModal}>
+			<Modal show={showUpdateUserModal} onClose={closeUpdateUserModal}>
 				<UpdateUser
 					userToUpdate={userToUpdate}
 					setUserToTupdate={setUserToUpdate}
-					onCancel={onCloseUpdateModal}
-					onUpdate={onUpdateUser}
+					onCancel={closeUpdateUserModal}
+					onUpdate={modifyUser}
 				/>
 			</Modal>
+			<Modal show={showRemoveUserModal} onClose={closeRemoveUserModal}>
+					<ModalConfirmation
+					onAccept={deleteUser}
+					onCancel={closeRemoveUserModal}
+					>
+						{`Do you want to permanetly delete ${userToUpdate.email}`}
+					</ModalConfirmation>
+				</Modal>
 		</>
 	);
 }

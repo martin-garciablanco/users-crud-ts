@@ -44,6 +44,11 @@ export const removeUser = createAsyncThunk("RemoveUser", async (user: User): Pro
 	});
 });
 
+export const getUserDetails = createAsyncThunk("GetUserDetails", async (email: string): Promise<User> => {
+	const response = await fetch(`http://localhost:3003/users/${email}`);
+	return await response.json()
+});
+
 export const getAllUsers = createAsyncThunk("GetAllUsers", async (): Promise<Array<User>> => {
 	const response = await fetch("http://localhost:3003/users");
 	const users = response.json();
@@ -63,6 +68,9 @@ const reducerOptions: CreateSliceOptions<UsersState, SliceCaseReducers<UsersStat
 			state.users = action.payload;
 		});
 		builder.addCase(updateUser.fulfilled, (state, action) => {
+			state.userDetails = action.payload;
+		});
+		builder.addCase(getUserDetails.fulfilled, (state, action) => {
 			state.userDetails = action.payload;
 		});
 	},
