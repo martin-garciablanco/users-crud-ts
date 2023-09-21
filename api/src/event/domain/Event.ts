@@ -11,15 +11,7 @@ export interface Event {
 }
 
 export class EventFactory {
-	static create({
-		userId,
-		type,
-		message,
-	}: {
-		userId: UUID;
-		type: EventType;
-		message: string;
-	}): Event {
+	static create(userId: UUID, type: EventType, message: string): Event {
 		return { id: randomUUID(), userId, type, message, time: new Date() };
 	}
 }
