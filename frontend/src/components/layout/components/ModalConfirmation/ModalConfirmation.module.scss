@@ -1,0 +1,21 @@
+.modalConfirmation{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 2rem;
+
+  .buttonsBlock {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: flex-end;
+
+    .button {
+      border-radius: 2rem;
+      padding: 1rem 2rem;
+    }
+
+    .button + .button {
+      margin-left: 1rem
+    }
+  }
+}
