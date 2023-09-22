@@ -6,7 +6,7 @@ import { UserService } from "../../../src/user/application/UserService";
 import { User } from "../../../src/user/domain/User";
 import { UserRepository } from "../../../src/user/domain/UserRepository";
 import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
-import { UserDetailsRequest, UserRequest } from "../../../src/user/infra/UserRequest";
+import { UserRequest, UserRequestFactory } from "../../../src/user/infra/UserRequest";
 import {
 	createRandomUser,
 	createRandomUserRequest,
@@ -29,27 +29,20 @@ describe("UserController", () => {
 				.post("/users")
 				.send(usersRequest)
 				.expect(201)
-				.then((response) => {
-					expect(response.body).toEqual(usersRequest);
+				.then(({ body }: { body: UserRequest }) => {
+					expect(body.email).toEqual(usersRequest.email);
+					expect(body.lastName).toEqual(usersRequest.lastName);
+					expect(body.name).toEqual(usersRequest.name);
+					expect(body.phoneNumber).toEqual(usersRequest.phoneNumber);
+					expect(body.events.length).toEqual(1);
+					expect(body.events[0].type).toEqual("CREATE");
 				});
-
-			const createdUser: User = usersRepository.users.get(usersRequest.email) as User;
-
-			expect(createdUser.name).toEqual(usersRequest.name);
-			expect(createdUser.lastName).toEqual(usersRequest.lastName);
-			expect(createdUser.email).toEqual(usersRequest.email);
-			expect(createdUser.phoneNumber).toEqual(usersRequest.phoneNumber);
 		});
 
 		it("Should return an 400 status code trying to create an user that already exists through users post endpoint", async () => {
 			const user = userStub;
 			const createdUser: User = usersRepository.create(user).get();
-			const createdUserRequest: UserRequest = {
-				name: createdUser.name,
-				lastName: createdUser.lastName,
-				email: createdUser.email,
-				phoneNumber: createdUser.phoneNumber,
-			};
+			const createdUserRequest = UserRequestFactory.createFromUser(createdUser);
 
 			await request(app).post("/users").send(createdUserRequest).expect(400);
 
@@ -96,7 +89,7 @@ describe("UserController", () => {
 				.get(`/users/${user.email}`)
 				.send()
 				.expect(200)
-				.then(({ body }: { body: UserDetailsRequest }) => {
+				.then(({ body }: { body: UserRequest }) => {
 					expect(body.name).toEqual(user.name);
 					expect(body.lastName).toEqual(user.lastName);
 					expect(body.phoneNumber).toEqual(user.phoneNumber);

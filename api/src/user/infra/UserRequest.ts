@@ -6,9 +6,6 @@ export interface UserRequest {
 	lastName: string;
 	email: string;
 	phoneNumber: string;
-}
-
-export interface UserDetailsRequest extends UserRequest {
 	events: Array<Event>;
 }
 
@@ -18,16 +15,21 @@ export class UserRequestFactory {
 		lastName,
 		phoneNumber,
 		email,
+		events = [],
 	}: {
 		name: string;
 		lastName: string;
 		phoneNumber: string;
 		email: string;
+		events: Array<Event>;
 	}): UserRequest {
-		return { name, lastName, phoneNumber, email };
+		return { name, lastName, phoneNumber, email, events };
 	}
 
-	static createFromUser({ name, lastName, phoneNumber, email }: User): UserRequest {
-		return { name, lastName, phoneNumber, email };
+	static createFromUser(
+		{ name, lastName, phoneNumber, email }: User,
+		events: Array<Event> = [],
+	): UserRequest {
+		return { name, lastName, phoneNumber, email, events };
 	}
 }
