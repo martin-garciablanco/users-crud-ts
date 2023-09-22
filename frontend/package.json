@@ -1,8 +1,7 @@
 {
-  "name": "@codelytv/vite-react_best_practices-template",
-  "author": "codelytv",
+  "name": "vite-react-users-crud",
+  "author": "martin-garciablanco",
   "license": "MIT",
-  "private": true,
   "version": "1.0.0",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
