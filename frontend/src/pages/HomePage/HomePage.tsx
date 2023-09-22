@@ -86,7 +86,7 @@ export function HomePage() {
 			<NavBar />
 			<main className={styles.main}>
 				<div className={styles.homeHeader}>
-					<h2>Current users</h2>
+					<h2 className={styles.pageSubtitle}>Current users</h2>
 					<button className={styles.newUserButton} onClick={openCreateUserModal}>
 						Create User
 					</button>

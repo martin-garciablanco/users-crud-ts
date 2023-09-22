@@ -5,6 +5,7 @@ import { Modal } from "../../components/layout/Modal/Modal";
 import { ModalConfirmation } from "../../components/layout/ModalConfirmation/ModalConfirmation";
 import { NavBar } from "../../components/layout/NavBar/NavBar";
 import { UpdateUser } from "../../components/user/UpdateUser/UpdateUser";
+import { UserEventsTable } from "../../components/user/UserEventsTable/UserEventsTable";
 import { UsersTable } from "../../components/user/UsersTable/UsersTable";
 import { User } from "../../domain/User";
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -67,6 +68,10 @@ export function UserDetails() {
 		setShowRemoveUserModal(true);
 	};
 
+	if (!user.email) {
+		return null;
+	}
+
 	return (
 		<>
 			<NavBar />
@@ -79,6 +84,9 @@ export function UserDetails() {
 						remove={removeUserModal}
 						enableSeeDetails={false}
 					/>
+					<div className={styles.eventsTable}>
+						<UserEventsTable events={user.events} />
+					</div>
 				</div>
 			</main>
 			<Modal show={showUpdateUserModal} onClose={closeUpdateUserModal}>

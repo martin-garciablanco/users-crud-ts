@@ -40,7 +40,7 @@ export function UsersTable({
 							<td>{user.name}</td>
 							<td>{user.lastName}</td>
 							<td>{user.phoneNumber}</td>
-							<td>
+							<td className={styles.buttonsBlock}>
 								<button className={styles.updateUserButton} onClick={() => updateUser(user)}>
 									✏️
 								</button>

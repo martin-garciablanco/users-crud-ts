@@ -1,7 +1,14 @@
-.updateUserButton {
-  border-radius: 100%;
-  padding: 1rem 1.3rem;
-}
-.updateUserButton + .updateUserButton {
-  margin-left: 1rem;
+.buttonsBlock {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .updateUserButton {
+    border-radius: 100%;
+    padding: 1rem 1.3rem;
+    margin: .5rem;
+  }
+  .updateUserButton + .updateUserButton {
+    margin-left: 1rem;
+  }
 }
