@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 
 import { Event } from "../../src/event/domain/Event";
 import { User } from "../../src/user/domain/User";
-import { UserRequest } from "../../src/user/infra/UserRequest";
+import { UserDetailsRequest, UserRequest } from "../../src/user/infra/UserRequest";
 
 export const userStub: User = {
 	id: randomUUID(),
@@ -25,6 +25,16 @@ export const createRandomUserRequest = (): UserRequest => {
 		lastName: `Doe-${Math.random()}`,
 		phoneNumber: `666666-${Math.random()}`,
 		email: `jhon-${Math.random()}@mail.com`,
+	};
+};
+
+export const createRandomUserDetailsRequest = (): UserDetailsRequest => {
+	return {
+		name: `jhon-${Math.random()}`,
+		lastName: `Doe-${Math.random()}`,
+		phoneNumber: `666666-${Math.random()}`,
+		email: `jhon-${Math.random()}@mail.com`,
+		events: [],
 	};
 };
 

@@ -1,3 +1,4 @@
+import { Event } from "../../event/domain/Event";
 import { User } from "../domain/User";
 
 export interface UserRequest {
@@ -5,6 +6,10 @@ export interface UserRequest {
 	lastName: string;
 	email: string;
 	phoneNumber: string;
+}
+
+export interface UserDetailsRequest extends UserRequest {
+	events: Array<Event>;
 }
 
 export class UserRequestFactory {

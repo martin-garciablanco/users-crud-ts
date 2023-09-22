@@ -1,8 +1,9 @@
 import { EventService } from "../../event/application/EventService";
 import { User, UserFactory } from "../domain/User";
 import { UserRepository } from "../domain/UserRepository";
+import { UserDetailsRequestFactory } from "../infra/UserDetailsRequest";
 import { UserInMemoryRepository } from "../infra/UserInMemoryRepository";
-import { UserRequest, UserRequestFactory } from "../infra/UserRequest";
+import { UserDetailsRequest, UserRequest, UserRequestFactory } from "../infra/UserRequest";
 import { UserAlreadyExistsError } from "./UserAlreadyExistsError";
 import { UserNotFoundError } from "./UserNotFoundError";
 
@@ -33,13 +34,14 @@ export class UserService {
 		return allUsers.map((user: User) => UserRequestFactory.createFromUser(user));
 	}
 
-	getUserByEmail(email: string): UserRequest {
+	getUserByEmail(email: string): UserDetailsRequest {
 		const userOptional = this.userRepository.getByEmail(email);
 
 		if (userOptional.isPresent()) {
 			const foundUser = userOptional.get();
+			const events = this.eventService.getEventsByUserId(foundUser.id);
 
-			return UserRequestFactory.createFromUser(foundUser);
+			return UserDetailsRequestFactory.createFromUser(foundUser, events);
 		}
 
 		throw new UserNotFoundError(`email: ${email}`);

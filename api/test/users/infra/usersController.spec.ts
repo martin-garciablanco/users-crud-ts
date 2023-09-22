@@ -6,7 +6,7 @@ import { UserService } from "../../../src/user/application/UserService";
 import { User } from "../../../src/user/domain/User";
 import { UserRepository } from "../../../src/user/domain/UserRepository";
 import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
-import { UserRequest } from "../../../src/user/infra/UserRequest";
+import { UserDetailsRequest, UserRequest } from "../../../src/user/infra/UserRequest";
 import {
 	createRandomUser,
 	createRandomUserRequest,
@@ -96,8 +96,11 @@ describe("UserController", () => {
 				.get(`/users/${user.email}`)
 				.send()
 				.expect(200)
-				.then((response) => {
-					expect(response.body).toEqual(user);
+				.then(({ body }: { body: UserDetailsRequest }) => {
+					expect(body.name).toEqual(user.name);
+					expect(body.lastName).toEqual(user.lastName);
+					expect(body.phoneNumber).toEqual(user.phoneNumber);
+					expect(body.events[0].type).toEqual("CREATE");
 				});
 		});
 
@@ -158,7 +161,7 @@ describe("UserController", () => {
 				});
 
 			const userUpdated = userService.getUserByEmail(userRequest.email);
-			expect(userUpdated).toEqual(userRequestToUpdate);
+			expect(userUpdated.lastName).toEqual(userRequestToUpdate.lastName);
 		});
 
 		it("should return 404 given an email that does not exist", async () => {

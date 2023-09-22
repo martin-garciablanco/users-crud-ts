@@ -2,10 +2,12 @@ import { randomUUID } from "crypto";
 import { Optional } from "typescript-optional";
 
 import { EventService } from "../../../src/event/application/EventService";
+import { Event } from "../../../src/event/domain/Event";
 import { UserAlreadyExistsError } from "../../../src/user/application/UserAlreadyExistsError";
 import { UserNotFoundError } from "../../../src/user/application/UserNotFoundError";
 import { UserService } from "../../../src/user/application/UserService";
 import { UserFactory } from "../../../src/user/domain/User";
+import { UserDetailsRequestFactory } from "../../../src/user/infra/UserDetailsRequest";
 import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
 import { UserRequest, UserRequestFactory } from "../../../src/user/infra/UserRequest";
 import { createRandomUser, createRandomUserRequest, userRequestStub } from "../userFixtures";
@@ -15,6 +17,10 @@ const eventService = EventService as jest.Mock<EventService>;
 const createEventMock = jest.fn();
 
 describe("UserService", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
 	describe("createUser", () => {
 		it("should create an user", () => {
 			const userRequest: UserRequest = userRequestStub;
@@ -108,16 +114,23 @@ describe("UserService", () => {
 
 		it("should return an userRequest given a proper email", () => {
 			const user = createRandomUser();
+			const events: Array<Event> = [];
 			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
 				return {
 					getByEmail: jest.fn().mockImplementation(() => Optional.of(user)),
 				} as UserInMemoryRepository;
 			});
+			const getEventsByUserIdMock = jest.fn().mockImplementation(() => events);
+			eventService.mockImplementation(() => {
+				return {
+					getEventsByUserId: getEventsByUserIdMock,
+				} as unknown as EventService;
+			});
 			const userService = new UserService();
 
 			const foundUserRequest = userService.getUserByEmail(user.email);
 
-			expect(foundUserRequest).toEqual(UserRequestFactory.createFromUser(user));
+			expect(foundUserRequest).toEqual(UserDetailsRequestFactory.createFromUser(user, []));
 		});
 	});
 

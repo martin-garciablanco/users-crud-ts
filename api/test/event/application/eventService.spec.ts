@@ -34,7 +34,7 @@ describe("EventService", () => {
 		});
 		const eventService = new EventService();
 
-		const events = eventService.getEventsByUserIs(event.userId);
+		const events = eventService.getEventsByUserId(event.userId);
 		expect(events.length).toEqual(1);
 		expect(events[0]).toEqual(event);
 	});
