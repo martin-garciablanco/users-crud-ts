@@ -20,7 +20,7 @@ export function UserTemplate({ user, setUser, emailDisabled }: UserTemplateProps
 	};
 
 	return (
-		<>
+		<div data-testid="user-template">
 			<div className={styles.block}>
 				<span>Email</span>
 				<input
@@ -34,6 +34,7 @@ export function UserTemplate({ user, setUser, emailDisabled }: UserTemplateProps
 			<div className={styles.block}>
 				<span>Name</span>
 				<input
+					name="name"
 					className={styles.input}
 					type="text"
 					value={user.name || ""}
@@ -43,6 +44,7 @@ export function UserTemplate({ user, setUser, emailDisabled }: UserTemplateProps
 			<div className={styles.block}>
 				<span>Last name</span>
 				<input
+					name="lastName"
 					className={styles.input}
 					type="text"
 					value={user.lastName || ""}
@@ -52,12 +54,13 @@ export function UserTemplate({ user, setUser, emailDisabled }: UserTemplateProps
 			<div className={styles.block}>
 				<span>Phone number</span>
 				<input
+					name="phoneNumber"
 					className={styles.input}
 					type="text"
 					value={user.phoneNumber || ""}
 					onChange={(e) => userChange(e, "phoneNumber")}
 				/>
 			</div>
-		</>
+		</div>
 	);
 }
