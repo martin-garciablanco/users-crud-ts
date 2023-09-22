@@ -4,9 +4,8 @@ import { useNavigate } from "react-router";
 import { Modal } from "../../components/layout/Modal/Modal";
 import { ModalConfirmation } from "../../components/layout/ModalConfirmation/ModalConfirmation";
 import { NavBar } from "../../components/layout/NavBar/NavBar";
-import { CreateUser } from "../../components/user/CreateUser/CreateUser";
-import { UpdateUser } from "../../components/user/UpdateUser/UpdateUser";
 import { UsersTable } from "../../components/user/UsersTable/UsersTable";
+import { UserTemplate } from "../../components/user/UserTemplate/UserTemplate";
 import { User } from "../../domain/User";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
@@ -99,19 +98,20 @@ export function HomePage() {
 				/>
 
 				<Modal show={showUpdateUserModal} onClose={closeUpdateModal}>
-					<UpdateUser
-						userToUpdate={userToUpdate}
-						setUserToTupdate={setUserToUpdate}
+					<UserTemplate
+						user={userToUpdate}
+						setUser={setUserToUpdate}
 						cancel={closeUpdateModal}
-						update={modifyUser}
+						accept={modifyUser}
+						emailDisabled={true}
 					/>
 				</Modal>
 				<Modal show={showCreateUserModal} onClose={closeCreateModal}>
-					<CreateUser
-						userToUpdate={userToUpdate}
-						setUserToTupdate={setUserToUpdate}
+					<UserTemplate
+						user={userToUpdate}
+						setUser={setUserToUpdate}
 						cancel={closeCreateModal}
-						create={createNewUser}
+						accept={createNewUser}
 					/>
 				</Modal>
 				<Modal show={showRemoveUserModal} onClose={closeRemoveUserModal}>

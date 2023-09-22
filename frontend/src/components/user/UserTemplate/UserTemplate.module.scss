@@ -1,6 +1,23 @@
-.block {
+.userTemplate {
   margin-bottom: 2rem;
+  margin-top: 2rem;
+  width: 100%;
 }
 .input {
   width: 100%;
+}
+
+.buttonsBlock {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+
+  .button {
+    border-radius: 2rem;
+    padding: 1rem 2rem;
+  }
+
+  .button + .button {
+    margin-left: 1rem;
+  }
 }

@@ -4,9 +4,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Modal } from "../../components/layout/Modal/Modal";
 import { ModalConfirmation } from "../../components/layout/ModalConfirmation/ModalConfirmation";
 import { NavBar } from "../../components/layout/NavBar/NavBar";
-import { UpdateUser } from "../../components/user/UpdateUser/UpdateUser";
 import { UserEventsTable } from "../../components/user/UserEventsTable/UserEventsTable";
 import { UsersTable } from "../../components/user/UsersTable/UsersTable";
+import { UserTemplate } from "../../components/user/UserTemplate/UserTemplate";
 import { User } from "../../domain/User";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getAllUsers, getUserDetails, removeUser, updateUser } from "../../store/users/usersSlice";
@@ -92,11 +92,11 @@ export function UserDetails() {
 				</div>
 			</main>
 			<Modal show={showUpdateUserModal} onClose={closeUpdateUserModal}>
-				<UpdateUser
-					userToUpdate={userToUpdate}
-					setUserToTupdate={setUserToUpdate}
+				<UserTemplate
+					user={userToUpdate}
+					setUser={setUserToUpdate}
 					cancel={closeUpdateUserModal}
-					update={modifyUser}
+					accept={modifyUser}
 				/>
 			</Modal>
 			<Modal show={showRemoveUserModal} onClose={closeRemoveUserModal}>

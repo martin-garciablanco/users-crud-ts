@@ -6,10 +6,18 @@ import styles from "./UserTemplate.module.scss";
 interface UserTemplateProps {
 	user: User;
 	setUser: React.Dispatch<SetStateAction<User>>;
-	emailDisabled: boolean;
+	emailDisabled?: boolean;
+	cancel: () => void;
+	accept: () => void;
 }
 
-export function UserTemplate({ user, setUser, emailDisabled }: UserTemplateProps) {
+export function UserTemplate({
+	user,
+	setUser,
+	cancel,
+	accept,
+	emailDisabled = false,
+}: UserTemplateProps) {
 	const userChange = (
 		e: ChangeEvent<HTMLInputElement>,
 		field: keyof Pick<User, "name" | "lastName" | "phoneNumber" | "email">
@@ -20,7 +28,7 @@ export function UserTemplate({ user, setUser, emailDisabled }: UserTemplateProps
 	};
 
 	return (
-		<div data-testid="user-template">
+		<div data-testid="user-template" className={styles.userTemplate}>
 			<div className={styles.block}>
 				<span>Email</span>
 				<input
@@ -60,6 +68,14 @@ export function UserTemplate({ user, setUser, emailDisabled }: UserTemplateProps
 					value={user.phoneNumber || ""}
 					onChange={(e) => userChange(e, "phoneNumber")}
 				/>
+			</div>
+			<div className={styles.buttonsBlock}>
+				<button onClick={cancel} className={styles.button}>
+					Cancel
+				</button>
+				<button onClick={accept} className={styles.button}>
+					Accept
+				</button>
 			</div>
 		</div>
 	);
