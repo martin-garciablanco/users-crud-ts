@@ -31,7 +31,11 @@ export class UserService {
 	getAllUsers(): Array<UserRequest> {
 		const allUsers = this.userRepository.getAll();
 
-		return allUsers.map((user: User) => UserRequestFactory.createFromUser(user));
+		return allUsers.map((user: User) => {
+			const events = this.eventService.getEventsByUserId(user.id);
+
+			return UserRequestFactory.createFromUser(user, events);
+		});
 	}
 
 	getUserByEmail(email: string): UserRequest {
@@ -65,13 +69,13 @@ export class UserService {
 				phoneNumber: userRequest.phoneNumber,
 			};
 			const userUpdatedOptional = this.userRepository.updateByEmail(userToUpdate);
-			this.createUpdatedUserEvent(foundUser.get());
-
 			const userUpdated = userUpdatedOptional.orElseThrow(
 				() => new UserNotFoundError(`email: ${userRequest.email}`),
 			);
+			this.createUpdatedUserEvent(userUpdated);
+			const events = this.eventService.getEventsByUserId(userUpdated.id);
 
-			return UserRequestFactory.createFromUser(userUpdated);
+			return UserRequestFactory.createFromUser(userUpdated, events);
 		}
 
 		throw new UserNotFoundError(`email: ${userRequest.email}`);

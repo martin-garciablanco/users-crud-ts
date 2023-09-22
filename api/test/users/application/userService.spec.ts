@@ -91,11 +91,17 @@ describe("UserService", () => {
 					getAll: jest.fn().mockImplementation(() => [userOne, userTwo]),
 				} as UserInMemoryRepository;
 			});
+			eventService.mockImplementation(() => {
+				return {
+					getEventsByUserId: getEventsByUserIdMock,
+				} as unknown as EventService;
+			});
 
 			const userService = new UserService();
 			const arrayOfUserRequest = userService.getAllUsers();
 
 			expect(arrayOfUserRequest.length).toEqual(2);
+			expect(getEventsByUserIdMock).toHaveBeenCalledTimes(2);
 		});
 	});
 	describe("getUserByEmail", () => {
@@ -181,6 +187,7 @@ describe("UserService", () => {
 			eventService.mockImplementation(() => {
 				return {
 					createEvent: createEventMock,
+					getEventsByUserId: getEventsByUserIdMock,
 				} as unknown as EventService;
 			});
 			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
@@ -194,6 +201,7 @@ describe("UserService", () => {
 			const updatedUserEmail = userService.updateUserByEmail(userRequest);
 
 			expect(createEventMock).toHaveBeenCalledTimes(1);
+			expect(getEventsByUserIdMock).toHaveBeenCalledTimes(1);
 			expect(updatedUserEmail).toEqual(userRequest);
 		});
 	});

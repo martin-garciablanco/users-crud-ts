@@ -61,20 +61,23 @@ describe("UserController", () => {
 				});
 		});
 		it("should show all users", async () => {
-			const userOne = createRandomUserRequest();
-			const userTwo = createRandomUserRequest();
+			const user = createRandomUserRequest();
 			const userService = new UserService();
-			userService.createUser(userOne);
-			userService.createUser(userTwo);
+			userService.createUser(user);
 
 			await request(app)
 				.get("/users")
 				.send()
 				.expect(200)
-				.then((response) => {
-					expect(response.body).toContainEqual(userOne);
-					expect(response.body).toContainEqual(userTwo);
-					expect((response.body as UserRequest[]).length).toEqual(2);
+				.then(({ body }: { body: Array<UserRequest> }) => {
+					const userRetrieved = body[0];
+					expect(userRetrieved.email).toEqual(user.email);
+					expect(userRetrieved.lastName).toEqual(user.lastName);
+					expect(userRetrieved.name).toEqual(user.name);
+					expect(userRetrieved.phoneNumber).toEqual(user.phoneNumber);
+					expect(userRetrieved.events.length).toEqual(1);
+					expect(userRetrieved.events[0].type).toEqual("CREATE");
+					expect(body.length).toEqual(1);
 				});
 		});
 	});
@@ -149,8 +152,9 @@ describe("UserController", () => {
 				.put(`/users/${userRequest.email}`)
 				.send(userRequestToUpdate)
 				.expect(200)
-				.then((response) => {
-					expect(response.body).toEqual(userRequestToUpdate);
+				.then(({ body }: { body: UserRequest }) => {
+					expect(body.lastName).toEqual(userRequestToUpdate.lastName);
+					expect(body.events.length).toEqual(2);
 				});
 
 			const userUpdated = userService.getUserByEmail(userRequest.email);
