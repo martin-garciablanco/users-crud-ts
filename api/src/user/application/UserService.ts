@@ -72,7 +72,7 @@ export class UserService {
 			const userUpdated = userUpdatedOptional.orElseThrow(
 				() => new UserNotFoundError(`email: ${userRequest.email}`),
 			);
-			this.createUpdatedUserEvent(userUpdated);
+			this.createUpdatedUserEvent(foundUser.get());
 			const events = this.eventService.getEventsByUserId(userUpdated.id);
 
 			return UserRequestFactory.createFromUser(userUpdated, events);
@@ -87,7 +87,7 @@ export class UserService {
 	}
 
 	private createUpdatedUserEvent(oldUser: User): void {
-		const updatedUserEventMessage = `User updated, old user info: ${String(oldUser)}`;
+		const updatedUserEventMessage = `User updated, old user info: ${JSON.stringify(oldUser)}`;
 		this.eventService.createEvent(oldUser.id, "UPDATE", updatedUserEventMessage);
 	}
 }
