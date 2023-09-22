@@ -1,7 +1,7 @@
 import { Event } from "../../event/domain/Event";
 import { User } from "../domain/User";
 
-export interface UserRequest {
+export interface UserDTO {
 	name: string;
 	lastName: string;
 	email: string;
@@ -9,7 +9,7 @@ export interface UserRequest {
 	events: Array<Event>;
 }
 
-export class UserRequestFactory {
+export class UserDTOFactory {
 	static create({
 		name,
 		lastName,
@@ -22,14 +22,14 @@ export class UserRequestFactory {
 		phoneNumber: string;
 		email: string;
 		events: Array<Event>;
-	}): UserRequest {
+	}): UserDTO {
 		return { name, lastName, phoneNumber, email, events };
 	}
 
 	static createFromUser(
 		{ name, lastName, phoneNumber, email }: User,
 		events: Array<Event> = [],
-	): UserRequest {
+	): UserDTO {
 		return { name, lastName, phoneNumber, email, events };
 	}
 }

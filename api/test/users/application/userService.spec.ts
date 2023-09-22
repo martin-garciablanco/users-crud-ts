@@ -3,12 +3,12 @@ import { Optional } from "typescript-optional";
 
 import { EventService } from "../../../src/event/application/EventService";
 import { UserAlreadyExistsError } from "../../../src/user/application/UserAlreadyExistsError";
+import { UserDTO, UserDTOFactory } from "../../../src/user/application/UserDTO";
 import { UserNotFoundError } from "../../../src/user/application/UserNotFoundError";
 import { UserService } from "../../../src/user/application/UserService";
 import { UserFactory } from "../../../src/user/domain/User";
 import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
-import { UserRequest, UserRequestFactory } from "../../../src/user/infra/UserRequest";
-import { createRandomUser, createRandomUserRequest, userRequestStub } from "../userFixtures";
+import { createRandomUser, createRandomUserDTO, userDTOStub } from "../userFixtures";
 
 jest.mock("../../../src/event/application/EventService");
 const eventService = EventService as jest.Mock<EventService>;
@@ -22,13 +22,13 @@ describe("UserService", () => {
 
 	describe("createUser", () => {
 		it("should create an user", () => {
-			const userRequest: UserRequest = userRequestStub;
+			const userDTO: UserDTO = userDTOStub;
 			const userCreatedStub = {
 				id: randomUUID(),
-				name: userRequest.name,
-				lastName: userRequest.lastName,
-				email: userRequest.email,
-				phoneNumber: userRequest.phoneNumber,
+				name: userDTO.name,
+				lastName: userDTO.lastName,
+				email: userDTO.email,
+				phoneNumber: userDTO.phoneNumber,
 			};
 			const repositoryCreateMock = jest.fn().mockImplementation(() => Optional.of(userCreatedStub));
 			const factoryCreateMock = jest.fn().mockImplementation(() => userCreatedStub);
@@ -46,16 +46,16 @@ describe("UserService", () => {
 			});
 			const userService = new UserService();
 
-			const createdUser = userService.createUser(userRequest);
+			const createdUser = userService.createUser(userDTO);
 
 			expect(repositoryCreateMock).toHaveBeenCalledTimes(1);
 			expect(factoryCreateMock).toHaveBeenCalledTimes(1);
 			expect(createEventMock).toHaveBeenCalledTimes(1);
-			expect(createdUser).toEqual(userRequest);
+			expect(createdUser).toEqual(userDTO);
 		});
 
 		it("should through an exeption if user already exist", () => {
-			const userRequest: UserRequest = userRequestStub;
+			const userDTO: UserDTO = userDTOStub;
 			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
 				return {
 					create: jest.fn().mockImplementation(() => Optional.empty()),
@@ -65,7 +65,7 @@ describe("UserService", () => {
 			const userService = new UserService();
 			const error = new UserAlreadyExistsError();
 
-			expect(() => userService.createUser(userRequest)).toThrowError(error.message);
+			expect(() => userService.createUser(userDTO)).toThrowError(error.message);
 		});
 	});
 
@@ -98,9 +98,9 @@ describe("UserService", () => {
 			});
 
 			const userService = new UserService();
-			const arrayOfUserRequest = userService.getAllUsers();
+			const arrayOfUserDTO = userService.getAllUsers();
 
-			expect(arrayOfUserRequest.length).toEqual(2);
+			expect(arrayOfUserDTO.length).toEqual(2);
 			expect(getEventsByUserIdMock).toHaveBeenCalledTimes(2);
 		});
 	});
@@ -118,7 +118,7 @@ describe("UserService", () => {
 			expect(() => userService.getUserByEmail(wrongEmail)).toThrowError(error.message);
 		});
 
-		it("should return an userRequest given a proper email", () => {
+		it("should return an userDTO given a proper email", () => {
 			const user = createRandomUser();
 			UserInMemoryRepository.initialize = jest.fn().mockImplementation(() => {
 				return {
@@ -132,9 +132,9 @@ describe("UserService", () => {
 			});
 			const userService = new UserService();
 
-			const foundUserRequest = userService.getUserByEmail(user.email);
+			const foundUserDTO = userService.getUserByEmail(user.email);
 
-			expect(foundUserRequest).toEqual(UserRequestFactory.createFromUser(user, []));
+			expect(foundUserDTO).toEqual(UserDTOFactory.createFromUser(user, []));
 		});
 	});
 
@@ -174,16 +174,16 @@ describe("UserService", () => {
 					getByEmail: jest.fn().mockImplementation(() => Optional.empty()),
 				} as UserInMemoryRepository;
 			});
-			const userRequestToUpdate = createRandomUserRequest();
+			const userDTOToUpdate = createRandomUserDTO();
 			const error = new UserNotFoundError();
 			const userService = new UserService();
 
-			expect(() => userService.updateUserByEmail(userRequestToUpdate)).toThrowError(error.message);
+			expect(() => userService.updateUserByEmail(userDTOToUpdate)).toThrowError(error.message);
 		});
 
 		it("should update an user given his email", () => {
 			const user = createRandomUser();
-			const userRequest = UserRequestFactory.createFromUser(user);
+			const userDTO = UserDTOFactory.createFromUser(user);
 			eventService.mockImplementation(() => {
 				return {
 					createEvent: createEventMock,
@@ -198,11 +198,11 @@ describe("UserService", () => {
 			});
 
 			const userService = new UserService();
-			const updatedUserEmail = userService.updateUserByEmail(userRequest);
+			const updatedUserEmail = userService.updateUserByEmail(userDTO);
 
 			expect(createEventMock).toHaveBeenCalledTimes(1);
 			expect(getEventsByUserIdMock).toHaveBeenCalledTimes(1);
-			expect(updatedUserEmail).toEqual(userRequest);
+			expect(updatedUserEmail).toEqual(userDTO);
 		});
 	});
 });

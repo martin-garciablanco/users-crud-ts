@@ -2,8 +2,8 @@ import { EventService } from "../../event/application/EventService";
 import { User, UserFactory } from "../domain/User";
 import { UserRepository } from "../domain/UserRepository";
 import { UserInMemoryRepository } from "../infra/UserInMemoryRepository";
-import { UserRequest, UserRequestFactory } from "../infra/UserRequest";
 import { UserAlreadyExistsError } from "./UserAlreadyExistsError";
+import { UserDTO, UserDTOFactory } from "./UserDTO";
 import { UserNotFoundError } from "./UserNotFoundError";
 
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
 		this.eventService = new EventService();
 	}
 
-	createUser({ name, lastName, phoneNumber, email }: UserRequest): UserRequest {
+	createUser({ name, lastName, phoneNumber, email }: UserDTO): UserDTO {
 		const user = UserFactory.create({ name, lastName, phoneNumber, email });
 		const createdUser = this.userRepository.create(user);
 		if (createdUser.isPresent()) {
@@ -28,24 +28,24 @@ export class UserService {
 		throw new UserAlreadyExistsError();
 	}
 
-	getAllUsers(): Array<UserRequest> {
+	getAllUsers(): Array<UserDTO> {
 		const allUsers = this.userRepository.getAll();
 
 		return allUsers.map((user: User) => {
 			const events = this.eventService.getEventsByUserId(user.id);
 
-			return UserRequestFactory.createFromUser(user, events);
+			return UserDTOFactory.createFromUser(user, events);
 		});
 	}
 
-	getUserByEmail(email: string): UserRequest {
+	getUserByEmail(email: string): UserDTO {
 		const userOptional = this.userRepository.getByEmail(email);
 
 		if (userOptional.isPresent()) {
 			const foundUser = userOptional.get();
 			const events = this.eventService.getEventsByUserId(foundUser.id);
 
-			return UserRequestFactory.createFromUser(foundUser, events);
+			return UserDTOFactory.createFromUser(foundUser, events);
 		}
 
 		throw new UserNotFoundError(`email: ${email}`);
@@ -59,26 +59,26 @@ export class UserService {
 		throw new UserNotFoundError(`email: ${email}`);
 	}
 
-	updateUserByEmail(userRequest: UserRequest): UserRequest {
-		const foundUser = this.userRepository.getByEmail(userRequest.email);
+	updateUserByEmail(userDTO: UserDTO): UserDTO {
+		const foundUser = this.userRepository.getByEmail(userDTO.email);
 		if (foundUser.isPresent()) {
 			const userToUpdate: User = {
 				...foundUser.get(),
-				name: userRequest.name,
-				lastName: userRequest.lastName,
-				phoneNumber: userRequest.phoneNumber,
+				name: userDTO.name,
+				lastName: userDTO.lastName,
+				phoneNumber: userDTO.phoneNumber,
 			};
 			const userUpdatedOptional = this.userRepository.updateByEmail(userToUpdate);
 			const userUpdated = userUpdatedOptional.orElseThrow(
-				() => new UserNotFoundError(`email: ${userRequest.email}`),
+				() => new UserNotFoundError(`email: ${userDTO.email}`),
 			);
 			this.createUpdatedUserEvent(foundUser.get());
 			const events = this.eventService.getEventsByUserId(userUpdated.id);
 
-			return UserRequestFactory.createFromUser(userUpdated, events);
+			return UserDTOFactory.createFromUser(userUpdated, events);
 		}
 
-		throw new UserNotFoundError(`email: ${userRequest.email}`);
+		throw new UserNotFoundError(`email: ${userDTO.email}`);
 	}
 
 	private createNewUserEvent(user: User): void {

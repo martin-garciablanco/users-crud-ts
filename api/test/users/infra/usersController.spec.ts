@@ -1,20 +1,15 @@
 import request from "supertest";
 
 import app from "../../../src/app";
+import { UserDTO, UserDTOFactory } from "../../../src/user/application/UserDTO";
 import { UserNotFoundError } from "../../../src/user/application/UserNotFoundError";
 import { UserService } from "../../../src/user/application/UserService";
 import { User } from "../../../src/user/domain/User";
 import { UserRepository } from "../../../src/user/domain/UserRepository";
 import { UserInMemoryRepository } from "../../../src/user/infra/UserInMemoryRepository";
-import { UserRequest, UserRequestFactory } from "../../../src/user/infra/UserRequest";
-import {
-	createRandomUser,
-	createRandomUserRequest,
-	userRequestStub,
-	userStub,
-} from "../userFixtures";
+import { createRandomUser, createRandomUserDTO, userDTOStub, userStub } from "../userFixtures";
 
-const usersRequest: UserRequest = userRequestStub;
+const usersRequest: UserDTO = userDTOStub;
 
 let usersRepository: UserRepository;
 describe("UserController", () => {
@@ -29,7 +24,7 @@ describe("UserController", () => {
 				.post("/users")
 				.send(usersRequest)
 				.expect(201)
-				.then(({ body }: { body: UserRequest }) => {
+				.then(({ body }: { body: UserDTO }) => {
 					expect(body.email).toEqual(usersRequest.email);
 					expect(body.lastName).toEqual(usersRequest.lastName);
 					expect(body.name).toEqual(usersRequest.name);
@@ -42,9 +37,9 @@ describe("UserController", () => {
 		it("Should return an 400 status code trying to create an user that already exists through users post endpoint", async () => {
 			const user = userStub;
 			const createdUser: User = usersRepository.create(user).get();
-			const createdUserRequest = UserRequestFactory.createFromUser(createdUser);
+			const createdUserDTO = UserDTOFactory.createFromUser(createdUser);
 
-			await request(app).post("/users").send(createdUserRequest).expect(400);
+			await request(app).post("/users").send(createdUserDTO).expect(400);
 
 			expect(usersRepository.users.size).toEqual(1);
 		});
@@ -57,11 +52,11 @@ describe("UserController", () => {
 				.send()
 				.expect(200)
 				.then((response) => {
-					expect(response.body as Array<UserRequest>).toEqual([]);
+					expect(response.body as Array<UserDTO>).toEqual([]);
 				});
 		});
 		it("should show all users", async () => {
-			const user = createRandomUserRequest();
+			const user = createRandomUserDTO();
 			const userService = new UserService();
 			userService.createUser(user);
 
@@ -69,7 +64,7 @@ describe("UserController", () => {
 				.get("/users")
 				.send()
 				.expect(200)
-				.then(({ body }: { body: Array<UserRequest> }) => {
+				.then(({ body }: { body: Array<UserDTO> }) => {
 					const userRetrieved = body[0];
 					expect(userRetrieved.email).toEqual(user.email);
 					expect(userRetrieved.lastName).toEqual(user.lastName);
@@ -84,7 +79,7 @@ describe("UserController", () => {
 
 	describe("List user by email", () => {
 		it("should show a saved user with same email", async () => {
-			const user = createRandomUserRequest();
+			const user = createRandomUserDTO();
 			const userService = new UserService();
 			userService.createUser(user);
 
@@ -92,7 +87,7 @@ describe("UserController", () => {
 				.get(`/users/${user.email}`)
 				.send()
 				.expect(200)
-				.then(({ body }: { body: UserRequest }) => {
+				.then(({ body }: { body: UserDTO }) => {
 					expect(body.name).toEqual(user.name);
 					expect(body.lastName).toEqual(user.lastName);
 					expect(body.phoneNumber).toEqual(user.phoneNumber);
@@ -140,35 +135,35 @@ describe("UserController", () => {
 
 	describe("Update user by email", () => {
 		it("should update a saved user given his email", async () => {
-			const userRequest = createRandomUserRequest();
-			const userRequestToUpdate = {
-				...userRequest,
+			const userDTO = createRandomUserDTO();
+			const userDTOToUpdate = {
+				...userDTO,
 				lastName: "lastName",
 			};
 			const userService = new UserService();
-			userService.createUser(userRequest);
+			userService.createUser(userDTO);
 
 			await request(app)
-				.put(`/users/${userRequest.email}`)
-				.send(userRequestToUpdate)
+				.put(`/users/${userDTO.email}`)
+				.send(userDTOToUpdate)
 				.expect(200)
-				.then(({ body }: { body: UserRequest }) => {
-					expect(body.lastName).toEqual(userRequestToUpdate.lastName);
+				.then(({ body }: { body: UserDTO }) => {
+					expect(body.lastName).toEqual(userDTOToUpdate.lastName);
 					expect(body.events.length).toEqual(2);
 				});
 
-			const userUpdated = userService.getUserByEmail(userRequest.email);
-			expect(userUpdated.lastName).toEqual(userRequestToUpdate.lastName);
+			const userUpdated = userService.getUserByEmail(userDTO.email);
+			expect(userUpdated.lastName).toEqual(userDTOToUpdate.lastName);
 		});
 
 		it("should return 404 given an email that does not exist", async () => {
 			const wrongEmail = "wrong@email.com";
-			const userRequest = createRandomUserRequest();
+			const userDTO = createRandomUserDTO();
 			const userNotFoundError = new UserNotFoundError();
 
 			await request(app)
 				.put(`/users/${wrongEmail}`)
-				.send(userRequest)
+				.send(userDTO)
 				.expect(404)
 				.then((response) => {
 					expect(response.text).toContain(userNotFoundError.message);

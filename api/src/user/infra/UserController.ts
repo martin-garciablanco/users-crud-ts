@@ -1,17 +1,17 @@
 import { Application, Request, Response } from "express";
 
 import { UserAlreadyExistsError } from "../application/UserAlreadyExistsError";
+import { UserDTO } from "../application/UserDTO";
 import { UserNotFoundError } from "../application/UserNotFoundError";
 import { UserService } from "../application/UserService";
-import { UserRequest } from "./UserRequest";
 
 export const userEndpoints = (app: Application): void => {
 	app.post("/users", (req: Request, res: Response) => {
 		try {
 			const userService = new UserService();
-			const createdUserRequest = userService.createUser(req.body as UserRequest);
+			const createdUserDTO = userService.createUser(req.body as UserDTO);
 
-			return res.status(201).send(createdUserRequest);
+			return res.status(201).send(createdUserDTO);
 		} catch (error: unknown) {
 			const userAlreadyExistsError = new UserAlreadyExistsError();
 			if (error instanceof Error && error.message === userAlreadyExistsError.message) {
@@ -85,9 +85,9 @@ export const userEndpoints = (app: Application): void => {
 			}
 
 			const userService = new UserService();
-			const updatedUserRequest = userService.updateUserByEmail(req.body as UserRequest);
+			const updatedUserDTO = userService.updateUserByEmail(req.body as UserDTO);
 
-			return res.status(200).send(updatedUserRequest);
+			return res.status(200).send(updatedUserDTO);
 		} catch (error: unknown) {
 			const userNotFoundError = new UserNotFoundError();
 
