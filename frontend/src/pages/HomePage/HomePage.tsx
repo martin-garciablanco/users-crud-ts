@@ -96,27 +96,26 @@ export function HomePage() {
 					update={openUpdateUserModal}
 					remove={removeUserModal}
 					seeDetails={seeUserDetails}
-					enableSeeDetails={true}
 				/>
 
 				<Modal show={showUpdateUserModal} onClose={closeUpdateModal}>
 					<UpdateUser
 						userToUpdate={userToUpdate}
 						setUserToTupdate={setUserToUpdate}
-						onCancel={closeUpdateModal}
-						onUpdate={modifyUser}
+						cancel={closeUpdateModal}
+						update={modifyUser}
 					/>
 				</Modal>
 				<Modal show={showCreateUserModal} onClose={closeCreateModal}>
 					<CreateUser
 						userToUpdate={userToUpdate}
 						setUserToTupdate={setUserToUpdate}
-						onCancel={closeCreateModal}
-						onCreate={createNewUser}
+						cancel={closeCreateModal}
+						create={createNewUser}
 					/>
 				</Modal>
 				<Modal show={showRemoveUserModal} onClose={closeRemoveUserModal}>
-					<ModalConfirmation onAccept={deleteUser} onCancel={closeRemoveUserModal}>
+					<ModalConfirmation accept={deleteUser} cancel={closeRemoveUserModal}>
 						{`Do you want to permanetly delete ${userToUpdate.email}`}
 					</ModalConfirmation>
 				</Modal>

@@ -6,10 +6,14 @@ import styles from "./UserTemplate.module.scss";
 interface UserTemplateProps {
 	user: User;
 	setUser: React.Dispatch<SetStateAction<User>>;
+	emailDisabled: boolean;
 }
 
-export function UserTemplate({ user, setUser }: UserTemplateProps) {
-	const onUserChange = (e: ChangeEvent<HTMLInputElement>, field: keyof User) => {
+export function UserTemplate({ user, setUser, emailDisabled }: UserTemplateProps) {
+	const userChange = (
+		e: ChangeEvent<HTMLInputElement>,
+		field: keyof Pick<User, "name" | "lastName" | "phoneNumber" | "email">
+	) => {
 		const updatedUser: User = { ...user };
 		updatedUser[field] = e.target.value;
 		setUser(updatedUser);
@@ -23,7 +27,8 @@ export function UserTemplate({ user, setUser }: UserTemplateProps) {
 					className={styles.input}
 					type="text"
 					value={user.email || ""}
-					onChange={(e) => onUserChange(e, "email")}
+					disabled={emailDisabled ? true : false}
+					onChange={(e) => userChange(e, "email")}
 				/>
 			</div>
 			<div className={styles.block}>
@@ -32,7 +37,7 @@ export function UserTemplate({ user, setUser }: UserTemplateProps) {
 					className={styles.input}
 					type="text"
 					value={user.name || ""}
-					onChange={(e) => onUserChange(e, "name")}
+					onChange={(e) => userChange(e, "name")}
 				/>
 			</div>
 			<div className={styles.block}>
@@ -41,7 +46,7 @@ export function UserTemplate({ user, setUser }: UserTemplateProps) {
 					className={styles.input}
 					type="text"
 					value={user.lastName || ""}
-					onChange={(e) => onUserChange(e, "lastName")}
+					onChange={(e) => userChange(e, "lastName")}
 				/>
 			</div>
 			<div className={styles.block}>
@@ -50,7 +55,7 @@ export function UserTemplate({ user, setUser }: UserTemplateProps) {
 					className={styles.input}
 					type="text"
 					value={user.phoneNumber || ""}
-					onChange={(e) => onUserChange(e, "phoneNumber")}
+					onChange={(e) => userChange(e, "phoneNumber")}
 				/>
 			</div>
 		</>

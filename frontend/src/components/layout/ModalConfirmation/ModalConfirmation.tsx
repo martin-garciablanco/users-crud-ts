@@ -2,8 +2,8 @@ import styles from "./ModalConfirmation.module.scss";
 
 interface ModalConfirmationProps {
 	children: string | JSX.Element | JSX.Element[];
-	onAccept: () => void;
-	onCancel: () => void;
+	accept: () => void;
+	cancel: () => void;
 }
 
 export function ModalConfirmation(props: ModalConfirmationProps) {
@@ -11,10 +11,10 @@ export function ModalConfirmation(props: ModalConfirmationProps) {
 		<div className={styles.modalConfirmation}>
 			{props.children}
 			<div className={styles.buttonsBlock}>
-				<button className={styles.button} onClick={props.onCancel}>
+				<button className={styles.button} onClick={props.cancel}>
 					Cancel
 				</button>
-				<button className={styles.button} onClick={props.onAccept}>
+				<button className={styles.button} onClick={props.accept}>
 					Accept
 				</button>
 			</div>

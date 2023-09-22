@@ -7,24 +7,19 @@ import styles from "./CreateUser.module.scss";
 interface CreateUserProps {
 	userToUpdate: User;
 	setUserToTupdate: React.Dispatch<SetStateAction<User>>;
-	onCancel: () => void;
-	onCreate: () => void;
+	cancel: () => void;
+	create: () => void;
 }
-export function CreateUser({
-	userToUpdate,
-	setUserToTupdate,
-	onCancel,
-	onCreate,
-}: CreateUserProps) {
+export function CreateUser({ userToUpdate, setUserToTupdate, cancel, create }: CreateUserProps) {
 	return (
 		<div className={styles.createBlock}>
 			<p>Create User</p>
-			<UserTemplate setUser={setUserToTupdate} user={userToUpdate} />
+			<UserTemplate setUser={setUserToTupdate} user={userToUpdate} emailDisabled={false} />
 			<div className={styles.buttonsBlock}>
-				<button onClick={onCancel} className={styles.button}>
+				<button onClick={cancel} className={styles.button}>
 					Cancel
 				</button>
-				<button onClick={onCreate} className={styles.button}>
+				<button onClick={create} className={styles.button}>
 					Create
 				</button>
 			</div>

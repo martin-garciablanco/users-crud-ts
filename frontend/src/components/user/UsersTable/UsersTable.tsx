@@ -6,22 +6,14 @@ interface UsersTableProps {
 	update: (user: User) => void;
 	remove: (user: User) => void;
 	seeDetails?: (user: User) => void;
-	enableSeeDetails: boolean;
 }
 
 export function UsersTable({
 	users,
 	update: updateUser,
-	enableSeeDetails,
 	remove: removeUser,
 	seeDetails,
 }: UsersTableProps) {
-	const onSeeDetails = (user: User) => {
-		if (seeDetails) {
-			seeDetails(user);
-		}
-	};
-
 	return (
 		<table>
 			<thead>
@@ -47,8 +39,8 @@ export function UsersTable({
 								<button className={styles.updateUserButton} onClick={() => removeUser(user)}>
 									❌
 								</button>
-								{enableSeeDetails && (
-									<button className={styles.updateUserButton} onClick={() => onSeeDetails(user)}>
+								{seeDetails && (
+									<button className={styles.updateUserButton} onClick={() => seeDetails(user)}>
 										📊
 									</button>
 								)}

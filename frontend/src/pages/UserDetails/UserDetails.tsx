@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { Modal } from "../../components/layout/Modal/Modal";
@@ -15,30 +15,31 @@ import styles from "./UserDetails.module.scss";
 export function UserDetails() {
 	const { search } = useLocation();
 	const navigate = useNavigate();
-	const [user, setUser] = useState<User>({} as User);
 	const [userToUpdate, setUserToUpdate] = useState<User>({} as User);
 	const [showUpdateUserModal, setShowUpdateUserModal] = useState(false);
 	const [showRemoveUserModal, setShowRemoveUserModal] = useState(false);
 	const userDetails = useAppSelector((state) => state.users.userDetails);
 	const dispatch = useAppDispatch();
 
-	const loadData = async (email: string) => {
-		await dispatch(getUserDetails(email));
-		setUser(userDetails);
-	};
+	const loadData = useCallback(
+		async (email: string) => {
+			await dispatch(getUserDetails(email));
+		},
+		[dispatch]
+	);
 
 	useEffect(() => {
 		const query = new URLSearchParams(search);
 		const email = query.get("email");
 		if (!email) {
 			navigate("/");
-		} else {
-			userDetails.email ? setUser(userDetails) : loadData(email);
+		} else if (!userDetails.email) {
+			loadData(email);
 		}
 	}, [search, navigate, userDetails, loadData]);
 
 	const openUpdateUserModal = () => {
-		const userToUpdate = { ...user };
+		const userToUpdate = { ...userDetails };
 		setUserToUpdate(userToUpdate);
 		setShowUpdateUserModal(true);
 	};
@@ -51,14 +52,14 @@ export function UserDetails() {
 		setShowRemoveUserModal(false);
 	};
 
-	const modifyUser = async () => {
-		await dispatch(updateUser(userToUpdate));
+	const modifyUser = () => {
+		dispatch(updateUser(userToUpdate));
 		setShowUpdateUserModal(false);
 	};
 
-	const deleteUser = async () => {
-		await dispatch(removeUser(userToUpdate));
-		await dispatch(getAllUsers());
+	const deleteUser = () => {
+		dispatch(removeUser(userToUpdate));
+		dispatch(getAllUsers());
 		closeRemoveUserModal();
 		navigate("/");
 	};
@@ -68,37 +69,38 @@ export function UserDetails() {
 		setShowRemoveUserModal(true);
 	};
 
-	if (!user.email) {
-		return null;
-	}
-
 	return (
 		<>
 			<NavBar />
 			<main className={styles.main}>
 				<div className={styles.homeHeader}>
 					<h2>User details</h2>
-					<UsersTable
-						users={[user]}
-						update={openUpdateUserModal}
-						remove={removeUserModal}
-						enableSeeDetails={false}
-					/>
-					<div className={styles.eventsTable}>
-						<UserEventsTable events={user.events} />
-					</div>
+					{!userDetails.email ? (
+						<p>User not foung</p>
+					) : (
+						<>
+							<UsersTable
+								users={[userDetails]}
+								update={openUpdateUserModal}
+								remove={removeUserModal}
+							/>
+							<div className={styles.eventsTable}>
+								<UserEventsTable events={userDetails.events} />
+							</div>
+						</>
+					)}
 				</div>
 			</main>
 			<Modal show={showUpdateUserModal} onClose={closeUpdateUserModal}>
 				<UpdateUser
 					userToUpdate={userToUpdate}
 					setUserToTupdate={setUserToUpdate}
-					onCancel={closeUpdateUserModal}
-					onUpdate={modifyUser}
+					cancel={closeUpdateUserModal}
+					update={modifyUser}
 				/>
 			</Modal>
 			<Modal show={showRemoveUserModal} onClose={closeRemoveUserModal}>
-				<ModalConfirmation onAccept={deleteUser} onCancel={closeRemoveUserModal}>
+				<ModalConfirmation accept={deleteUser} cancel={closeRemoveUserModal}>
 					{`Do you want to permanetly delete ${userToUpdate.email}`}
 				</ModalConfirmation>
 			</Modal>

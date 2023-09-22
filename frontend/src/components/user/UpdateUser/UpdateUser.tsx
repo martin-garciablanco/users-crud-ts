@@ -7,24 +7,19 @@ import styles from "./UpdateUser.module.scss";
 interface UpdateUserProps {
 	userToUpdate: User;
 	setUserToTupdate: React.Dispatch<SetStateAction<User>>;
-	onCancel: () => void;
-	onUpdate: () => void;
+	cancel: () => void;
+	update: () => void;
 }
-export function UpdateUser({
-	userToUpdate,
-	setUserToTupdate,
-	onCancel,
-	onUpdate,
-}: UpdateUserProps) {
+export function UpdateUser({ userToUpdate, setUserToTupdate, cancel, update }: UpdateUserProps) {
 	return (
 		<div className={styles.updateBlock}>
 			<p>Update User</p>
-			<UserTemplate setUser={setUserToTupdate} user={userToUpdate} />
+			<UserTemplate setUser={setUserToTupdate} user={userToUpdate} emailDisabled={true} />
 			<div className={styles.buttonsBlock}>
-				<button onClick={onCancel} className={styles.button}>
+				<button onClick={cancel} className={styles.button}>
 					Cancel
 				</button>
-				<button onClick={onUpdate} className={styles.button}>
+				<button onClick={update} className={styles.button}>
 					Update
 				</button>
 			</div>
