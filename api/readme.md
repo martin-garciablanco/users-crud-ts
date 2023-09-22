@@ -1,6 +1,6 @@
-# TypeScript Express API Bootstrap (base / project starter)
+# TypeScript Express API Bootstrap (Users crud)
 
-This is a repository intended to serve as a starting point if you want to bootstrap a express API project in TypeScript.
+Backend application that allows you to create, read, update and delete a list of contacts. Each contact will have: First name, Last name, Email, and phone number. All the fields are mandatory and there can't be two contacts with the same email. You should be able to see the history of edits on those contacts
 
 ## Features
 
@@ -8,10 +8,7 @@ This is a repository intended to serve as a starting point if you want to bootst
 - [ts-node-dev](https://github.com/wclr/ts-node-dev)
 - [Prettier](https://prettier.io/)
 - [ESLint](https://eslint.org/) with:
-  - [Codely's config](https://github.com/lydell/eslint-plugin-simple-import-sort/) (includes ESLint's recommended rules, Prettier, Import plugin and more)
-  - [Jest plugin](https://www.npmjs.com/package/eslint-plugin-jest)
 - [Jest](https://jestjs.io) with [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro)
-- [GitHub Action workflows](https://github.com/features/actions) set up to run tests and linting on push
 
 ## Running the app
 
@@ -19,7 +16,7 @@ This is a repository intended to serve as a starting point if you want to bootst
 # install dependencies
 npm install
 
-# run in dev mode on port 3000
+# run in dev mode on port 3003
 npm run dev
 
 # generate production build
