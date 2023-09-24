@@ -8,12 +8,7 @@ interface UsersTableProps {
 	seeDetails?: (user: User) => void;
 }
 
-export function UsersTable({
-	users,
-	update: updateUser,
-	remove: removeUser,
-	seeDetails,
-}: UsersTableProps) {
+export function UsersTable({ users, update, remove, seeDetails }: UsersTableProps) {
 	return (
 		<table>
 			<thead>
@@ -33,10 +28,10 @@ export function UsersTable({
 							<td>{user.lastName}</td>
 							<td>{user.phoneNumber}</td>
 							<td className={styles.buttonsBlock}>
-								<button className={styles.updateUserButton} onClick={() => updateUser(user)}>
+								<button className={styles.updateUserButton} onClick={() => update(user)}>
 									✏️
 								</button>
-								<button className={styles.updateUserButton} onClick={() => removeUser(user)}>
+								<button className={styles.updateUserButton} onClick={() => remove(user)}>
 									❌
 								</button>
 								{seeDetails && (
