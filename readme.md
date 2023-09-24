@@ -19,6 +19,8 @@ There are an api/ and a frontend folders, both have a readme that explains easil
 - Create an Error page
 - Redux typing
 - Styles (SCSS) standarization
+- Integration tests
+- Pages tests
 
 ### Backend
 
