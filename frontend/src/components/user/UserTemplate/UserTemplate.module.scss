@@ -5,6 +5,10 @@
 }
 .input {
   width: 100%;
+
+  &:disabled {
+    color: darkgrey;
+  }
 }
 
 .buttonsBlock {
